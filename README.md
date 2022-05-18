@@ -1,39 +1,62 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+A library for getting platform details.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+[![pub package](https://img.shields.io/pub/v/http.svg)](https://pub.dev/packages/platform_detail)
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+This lightweight package allows in a very simple and optimized way to obtain details about the platform on which it is running. It's multi-platform, and supports mobile, desktop,
+and the browser.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## Using
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+The easiest way to use this library is to call the [PlatformDetail][] class as follows. 
+Multiple instances are not being created since thanks to a factory constructor it always 
+returns an internal singleton:
 
 ```dart
-const like = 'sample';
+import 'package:platform_detail/platform_detail.dart';
+
+if (PlatformDetail().isMobile) {
+  print('The current platform is Mobile');
+}  
+
+if (PlatformDetail().isDesktopOrWeb) {
+  print('The current platform is Desktop or Web');
+}
+
+if (PlatformDetail().isDesktop) {
+  print('The current platform is Desktop');
+}
+
+if (PlatformDetail().isWeb) {
+  print('The current platform is web');
+}
 ```
 
-## Additional information
+If instead you want to ask individually for each platform supported by Flutter:
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+```dart
+if (PlatformDetail().isIOS) {
+  print('The current platform is iOS');
+}
+
+if (PlatformDetail().isAndroid) {
+  print('The current platform is Android');
+}
+
+if (PlatformDetail().isFuchsia) {
+  print('The current platform is Fuchsia');
+}
+
+if (PlatformDetail().isWindows) {
+  print('The current platform is Windows');
+}
+
+if (PlatformDetail().isLinux) {
+  print('The current platform is Linux');
+}
+
+if (PlatformDetail().isMacOS) {
+  print('The current platform is macOS');
+}
+```
+
+[PlatformDetail]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart

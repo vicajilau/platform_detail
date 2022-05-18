@@ -1,7 +1,7 @@
 name: platform_detail
-description: Obtain details of the current platform in a much more complete and simple way.
+description: A lightweight library to obtain details of the current platform in a much more complete and simple way.
 version: 1.0.0
-homepage:
+homepage: https://github.com/vicajilau/platform_detail
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
