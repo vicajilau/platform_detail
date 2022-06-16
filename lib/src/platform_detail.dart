@@ -23,16 +23,10 @@ class PlatformDetails {
       defaultTargetPlatform == TargetPlatform.fuchsia;
 
   /// This parameter checks if the current platform is web or not.
-  bool get isWeb =>
-      defaultTargetPlatform != TargetPlatform.macOS &&
-      defaultTargetPlatform != TargetPlatform.linux &&
-      defaultTargetPlatform != TargetPlatform.windows &&
-      defaultTargetPlatform != TargetPlatform.iOS &&
-      defaultTargetPlatform != TargetPlatform.android &&
-      defaultTargetPlatform != TargetPlatform.fuchsia;
+  bool get isWeb => kIsWeb;
 
   /// This parameter calls the isDesktop and isMobile methods to detect if the current platform is desktop or web
-  bool get isDesktopOrWeb => isDesktop || !isMobile;
+  bool get isDesktopOrWeb => isDesktop || isWeb;
 
   /// Check if the platform on which the code is running is iOS
   bool get isIOS => defaultTargetPlatform == TargetPlatform.iOS;
