@@ -1,3 +1,6 @@
+## 2.0.0
+* factory constructor removed, now everything are static variables.
+
 ## 1.1.0
 * isWeb bug fixed.
 * isDesktopOrWeb optimized.

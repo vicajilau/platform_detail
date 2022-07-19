@@ -14,19 +14,19 @@ returns an internal singleton:
 ```dart
 import 'package:platform_detail/platform_detail.dart';
 
-if (PlatformDetail().isMobile) {
+if (PlatformDetail.isMobile) {
   print('The current platform is Mobile');
 }  
 
-if (PlatformDetail().isDesktopOrWeb) {
+if (PlatformDetail.isDesktopOrWeb) {
   print('The current platform is Desktop or Web');
 }
 
-if (PlatformDetail().isDesktop) {
+if (PlatformDetail.isDesktop) {
   print('The current platform is Desktop');
 }
 
-if (PlatformDetail().isWeb) {
+if (PlatformDetail.isWeb) {
   print('The current platform is web');
 }
 ```
@@ -34,27 +34,27 @@ if (PlatformDetail().isWeb) {
 If instead you want to ask individually for each platform supported by Flutter:
 
 ```dart
-if (PlatformDetail().isIOS) {
+if (PlatformDetail.isIOS) {
   print('The current platform is iOS');
 }
 
-if (PlatformDetail().isAndroid) {
+if (PlatformDetail.isAndroid) {
   print('The current platform is Android');
 }
 
-if (PlatformDetail().isFuchsia) {
+if (PlatformDetail.isFuchsia) {
   print('The current platform is Fuchsia');
 }
 
-if (PlatformDetail().isWindows) {
+if (PlatformDetail.isWindows) {
   print('The current platform is Windows');
 }
 
-if (PlatformDetail().isLinux) {
+if (PlatformDetail.isLinux) {
   print('The current platform is Linux');
 }
 
-if (PlatformDetail().isMacOS) {
+if (PlatformDetail.isMacOS) {
   print('The current platform is macOS');
 }
 ```
