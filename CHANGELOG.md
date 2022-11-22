@@ -1,5 +1,9 @@
+## 2.0.1
+* Some minor improvement.
+* Readme improved.
+
 ## 2.0.0
-* factory constructor removed, now everything are static variables.
+* Factory constructor removed, now everything are static variables.
 
 ## 1.1.0
 * isWeb bug fixed.
