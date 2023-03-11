@@ -38,10 +38,10 @@ switch (PlatformDetails.type) {
   case PlatformGroup.mobile:
     print('The current group platform is mobile');
     break;
-  case PlatformGroup.desktop:
+  case PlatformGroup.web:
     print('The current group platform is web');
     break;
-  case PlatformGroup.web:
+  case PlatformGroup.desktop:
     print('The current group platform is desktop');
     break;
 }
