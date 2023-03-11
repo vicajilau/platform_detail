@@ -34,16 +34,16 @@ if (PlatformDetail.isWeb) {
 In addition, you can also use the enum in the [PlatformGroup][] to which it belongs. That is, if it is web, mobile or desktop:
 
 ```dart
-if (PlatformDetail.type == PlatfromGroup.mobile) {
-  print('The current group platform is mobile');
-}
-
-if (PlatformDetail.type == PlatfromGroup.web) {
-  print('The current group platform is web');
-}
-
-if (PlatformDetail.type == PlatfromGroup.desktop) {
-  print('The current group platform is desktop');
+switch (PlatformDetails.type) {
+  case PlatformGroup.mobile:
+    print('The current group platform is mobile');
+    break;
+  case PlatformGroup.desktop:
+    print('The current group platform is web');
+    break;
+  case PlatformGroup.web:
+    print('The current group platform is desktop');
+    break;
 }
 ```
 
