@@ -1,3 +1,7 @@
+## 2.1.2
+
+* Fix an issue when type parameter was accessed.
+
 ## 2.1.1
 
 * Fix some minor issues.
