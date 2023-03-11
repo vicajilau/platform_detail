@@ -1,7 +1,23 @@
 import 'package:flutter/foundation.dart';
 
+/// It groups in an enumerated list the type of platform on which a Flutter application can be run.
+enum PlatformGroup { mobile, desktop, web }
+
 /// Allows you to determine platform details such as operating system or environment
 class PlatformDetails {
+
+  /// This parameter returns an enum with the group of platform related
+  static PlatformGroup get type {
+    if (isDesktop) {
+      return PlatformGroup.desktop;
+    } else if (isMobile) {
+      return PlatformGroup.mobile;
+    } else if (isWeb) {
+      return PlatformGroup.web;
+    }
+    throw Exception('Platform unrecognized');
+  }
+
   /// This parameter checks if the current platform is macos, linux or windows. THE WEB PLATFORM IS NOT INCLUDED!
   static bool get isDesktop =>
       defaultTargetPlatform == TargetPlatform.macOS ||
