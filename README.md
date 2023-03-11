@@ -31,6 +31,22 @@ if (PlatformDetail.isWeb) {
 }
 ```
 
+In addition, you can also use the enum in the [PlatformGroup][] to which it belongs. That is, if it is web, mobile or desktop:
+
+```dart
+if (PlatformDetail.type == PlatfromGroup.mobile) {
+  print('The current group platform is mobile');
+}
+
+if (PlatformDetail.type == PlatfromGroup.web) {
+  print('The current group platform is web');
+}
+
+if (PlatformDetail.type == PlatfromGroup.desktop) {
+  print('The current group platform is desktop');
+}
+```
+
 If instead you want to ask individually for each platform supported by Flutter:
 
 ```dart
@@ -57,23 +73,6 @@ if (PlatformDetail.isLinux) {
 if (PlatformDetail.isMacOS) {
   print('The current platform is macOS');
 }
-```
-
-In addition, you can also find out which [PlatformGroup][] it belongs to. That is, if it is web, mobile or desktop:
-
-```dart
-if (PlatformDetail.type == PlatfromGroup.mobile) {
-  print('The current group platform is mobile');
-}
-
-if (PlatformDetail.type == PlatfromGroup.web) {
-print('The current group platform is web');
-}
-
-if (PlatformDetail.type == PlatfromGroup.desktop) {
-print('The current group platform is desktop');
-}
-
 ```
 
 [PlatformDetail]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart

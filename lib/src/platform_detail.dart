@@ -5,7 +5,6 @@ enum PlatformGroup { mobile, desktop, web }
 
 /// Allows you to determine platform details such as operating system or environment
 class PlatformDetails {
-
   /// This parameter returns an enum with the group of platform related
   static PlatformGroup get type {
     if (isDesktop) {
@@ -15,7 +14,7 @@ class PlatformDetails {
     } else if (isWeb) {
       return PlatformGroup.web;
     }
-    throw Exception('Platform unrecognized');
+    throw Exception('Platform ($defaultTargetPlatform) unrecognized.');
   }
 
   /// This parameter checks if the current platform is macos, linux or windows. THE WEB PLATFORM IS NOT INCLUDED!
