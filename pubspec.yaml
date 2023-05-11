@@ -1,10 +1,10 @@
 name: platform_detail
 description: A lightweight library to obtain details of the current platform in a much more complete and simple way.
-version: 2.1.2
+version: 2.2.0
 homepage: https://github.com/vicajilau/platform_detail
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: '>=3.0.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:

@@ -1,3 +1,7 @@
+## 2.2.0
+
+* Updated to Dart 3.
+
 ## 2.1.2
 
 * Fix an issue when type parameter was accessed.
