@@ -74,6 +74,30 @@ if (PlatformDetail.isMacOS) {
   print('The current platform is macOS');
 }
 ```
+You can detect too if the device is configured in light or dark mode:
+
+```dart
+if (PlatformDetail.isLightMode) {
+  print('The current platform is configured with light mode');
+}
+
+if (PlatformDetail.isDarkMode) {
+print('The current platform is configured with dark mode');
+}
+```
+
+Also, you can use the [DeviceTheme][] enum for this:
+
+```dart
+if (PlatformDetail.theme == DeviceTheme.light) {
+  print('The current device is configured in light mode');
+}
+
+if (PlatformDetail.theme == DeviceTheme.dark) {
+print('The current device is configured in dark mode');
+}
+```
 
 [PlatformDetail]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart
 [PlatformGroup]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart
+[DeviceTheme]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart

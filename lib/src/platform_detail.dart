@@ -1,7 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
 
 /// It groups in an enumerated list the type of platform on which a Flutter application can be run.
 enum PlatformGroup { mobile, desktop, web }
+
+/// Groups in an enumerated list the type of theme the device is configured with.
+enum DeviceTheme { light, dark }
 
 /// Allows you to determine platform details such as operating system or environment
 class PlatformDetails {
@@ -52,4 +56,20 @@ class PlatformDetails {
 
   /// Check if the platform on which the code is running is macOS
   static bool get isMacOS => defaultTargetPlatform == TargetPlatform.macOS;
+
+  /// Check if the device has enabled Dark Mode
+  static bool get isDarkMode {
+    var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+    return brightness == Brightness.dark;
+  }
+
+  /// Check if the device has Light Mode
+  static bool get isLightMode {
+    var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+    return brightness == Brightness.light;
+  }
+
+  /// Returns the type of theme applied to the device
+  static DeviceTheme get theme => isLightMode ? DeviceTheme.light : DeviceTheme.dark;
+
 }

@@ -1,3 +1,11 @@
+## 3.0.0
+
+* Added isDarkMode property to detect the kind of theme is dark.
+* Added isLightMode property to detect the kind of theme is light.
+* Added DeviceTheme enum.
+* Added theme property to detector the kind of theme (light - dark).
+* Upgraded dependencies.
+
 ## 2.2.0
 
 * Updated to Dart 3.
