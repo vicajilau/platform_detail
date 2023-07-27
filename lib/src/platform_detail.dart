@@ -8,7 +8,7 @@ enum PlatformGroup { mobile, desktop, web }
 enum DeviceTheme { light, dark }
 
 /// Allows you to determine platform details such as operating system or environment
-class PlatformDetails {
+class PlatformDetail {
   /// This parameter returns an enum with the group of platform related
   static PlatformGroup get type {
     if (isWeb) {
@@ -24,14 +24,14 @@ class PlatformDetails {
   /// This parameter checks if the current platform is macos, linux or windows. THE WEB PLATFORM IS NOT INCLUDED!
   static bool get isDesktop =>
       defaultTargetPlatform == TargetPlatform.macOS ||
-          defaultTargetPlatform == TargetPlatform.linux ||
-          defaultTargetPlatform == TargetPlatform.windows;
+      defaultTargetPlatform == TargetPlatform.linux ||
+      defaultTargetPlatform == TargetPlatform.windows;
 
   /// This parameter checks if the current platform is iOS, Android or Fuchsia.
   static bool get isMobile =>
       defaultTargetPlatform == TargetPlatform.iOS ||
-          defaultTargetPlatform == TargetPlatform.android ||
-          defaultTargetPlatform == TargetPlatform.fuchsia;
+      defaultTargetPlatform == TargetPlatform.android ||
+      defaultTargetPlatform == TargetPlatform.fuchsia;
 
   /// This parameter checks if the current platform is web or not.
   static bool get isWeb => kIsWeb;
@@ -59,17 +59,19 @@ class PlatformDetails {
 
   /// Check if the device has enabled Dark Mode
   static bool get isDarkMode {
-    var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+    var brightness =
+        SchedulerBinding.instance.platformDispatcher.platformBrightness;
     return brightness == Brightness.dark;
   }
 
   /// Check if the device has Light Mode
   static bool get isLightMode {
-    var brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+    var brightness =
+        SchedulerBinding.instance.platformDispatcher.platformBrightness;
     return brightness == Brightness.light;
   }
 
   /// Returns the type of theme applied to the device
-  static DeviceTheme get theme => isLightMode ? DeviceTheme.light : DeviceTheme.dark;
-
+  static DeviceTheme get theme =>
+      isLightMode ? DeviceTheme.light : DeviceTheme.dark;
 }

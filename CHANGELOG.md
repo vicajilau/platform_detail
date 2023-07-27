@@ -1,3 +1,7 @@
+## 3.0.0+1
+
+* Renamed PlatformDetails by PlatformDetail
+
 ## 3.0.0
 
 * Added isDarkMode property to detect the kind of theme is dark.
