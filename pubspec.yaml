@@ -1,6 +1,6 @@
 name: platform_detail
 description: A lightweight library to obtain details of the current platform in a much more complete and simple way.
-version: 3.0.0+1
+version: 3.0.1
 homepage: https://github.com/vicajilau/platform_detail
 
 environment:
