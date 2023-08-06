@@ -1,3 +1,10 @@
+## 3.1.0
+
+* Renamed type by currentGroupPlatform
+* Added currentPlatform to get an enumeration indicating the current operating system on which it is running.
+* Upgraded documentation.
+* Updated dependencies.
+
 ## 3.0.1
 
 * Renamed PlatformDetails by PlatformDetail
