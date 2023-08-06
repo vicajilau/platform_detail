@@ -1,3 +1,7 @@
+## 3.2.1
+* Renamed productName by deviceInfo().
+* Updated documentation.
+
 ## 3.2.0
 * Added productName.
 * Updated documentation.
