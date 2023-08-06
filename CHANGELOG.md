@@ -1,3 +1,8 @@
+## 3.2.0
+* Added productName.
+* Updated documentation.
+* Upgraded documentation.
+
 ## 3.1.0
 
 * Renamed type by currentGroupPlatform

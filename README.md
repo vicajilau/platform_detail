@@ -9,7 +9,10 @@ and the browser.
 
 The easiest way to use this library is to call the [PlatformDetail][] class as follows. 
 Multiple instances are not being created since thanks to a factory constructor it always 
-returns an internal singleton:
+returns an internal singleton.
+
+### Detecting by type of platform
+If you just need to know if it's mobile, desktop, web, or even desktop/web. You will love:
 
 ```dart
 import 'package:platform_detail/platform_detail.dart';
@@ -34,7 +37,7 @@ if (PlatformDetail.isWeb) {
 In addition, you can also use the enum in the [PlatformGroup][] to which it belongs. That is, if it is web, mobile or desktop:
 
 ```dart
-switch (PlatformDetails.type) {
+switch (PlatformDetails.currentGroupPlatform) {
   case PlatformGroup.mobile:
     print('The current group platform is mobile');
     break;
@@ -47,6 +50,7 @@ switch (PlatformDetails.type) {
 }
 ```
 
+### Detecting by single platform
 If instead you want to ask individually for each platform supported by Flutter:
 
 ```dart
@@ -74,6 +78,15 @@ if (PlatformDetail.isMacOS) {
   print('The current platform is macOS');
 }
 ```
+
+
+### Get a device description
+If you need more detailed information about the device and operating system it is running on. In web you will get information from the browser:
+```dart
+final descriptionDevice = await PlatformDetail.productName;
+```
+
+### Light/Dark Mode
 You can detect too if the device is configured in light or dark mode:
 
 ```dart

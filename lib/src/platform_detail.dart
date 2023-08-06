@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -91,4 +92,54 @@ class PlatformDetail {
   /// Returns the type of theme applied to the device.
   static DeviceTheme get theme =>
       isLightMode ? DeviceTheme.light : DeviceTheme.dark;
+}
+
+extension DevicesName on PlatformDetail {
+  /// This parameter returns the industrial name and OS version of the current device.
+  /// EXAMPLES:
+  /// Android: Android 9 (SDK 28), Xiaomi Redmi Note 7
+  /// iOS: iOS 13.1, iPhone 11 Pro Max iPhone
+  /// Web: Google Chrome (115.0.5790.170)
+  /// Linux: Fedora 17 (Beefy Miracle)
+  /// Windows: Windows 10 Home (1903)
+  /// MacOS: macOS 13.5, MacBook Pro
+  static Future<String> get productName async {
+    if (PlatformDetail.isWeb) {
+      final info = await DeviceInfoPlugin().webBrowserInfo;
+      return '${info.browserName.name} (${info.appVersion})';
+    }
+
+    switch (PlatformDetail.currentPlatform) {
+      case TargetPlatform.android:
+        final androidInfo = await DeviceInfoPlugin().androidInfo;
+        final release = androidInfo.version.release;
+        final sdkInt = androidInfo.version.sdkInt;
+        final manufacturer = androidInfo.manufacturer;
+        final model = androidInfo.model;
+        return 'Android $release (SDK $sdkInt), $manufacturer $model';
+      case TargetPlatform.fuchsia:
+        final fuchsiaInfo = await DeviceInfoPlugin().androidInfo;
+        final release = fuchsiaInfo.version.release;
+        final sdkInt = fuchsiaInfo.version.sdkInt;
+        final manufacturer = fuchsiaInfo.manufacturer;
+        final model = fuchsiaInfo.model;
+        return 'Fuchsia $release (SDK $sdkInt), $manufacturer $model';
+      case TargetPlatform.iOS:
+        var iosInfo = await DeviceInfoPlugin().iosInfo;
+        var systemName = iosInfo.systemName;
+        var version = iosInfo.systemVersion;
+        var name = iosInfo.name;
+        var model = iosInfo.model;
+        return '$systemName $version, $name $model';
+      case TargetPlatform.linux:
+        final info = await DeviceInfoPlugin().linuxInfo;
+        return info.prettyName;
+      case TargetPlatform.macOS:
+        final info = await DeviceInfoPlugin().macOsInfo;
+        return "macOS ${info.osRelease}, ${info.model}";
+      case TargetPlatform.windows:
+        final info = await DeviceInfoPlugin().windowsInfo;
+        return "${info.productName}(${info.releaseId})";
+    }
+  }
 }
