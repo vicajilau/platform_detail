@@ -1,3 +1,7 @@
+## 3.3.0
+* Added if the mobile's device is a simulator.
+* Updated dependencies.
+
 ## 3.2.1
 * Renamed productName by deviceInfo().
 * Updated documentation.

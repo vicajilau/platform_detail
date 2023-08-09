@@ -96,21 +96,24 @@ class PlatformDetail {
         final sdkInt = androidInfo.version.sdkInt;
         final manufacturer = androidInfo.manufacturer;
         final model = androidInfo.model;
-        return 'Android $release (SDK $sdkInt), $manufacturer $model';
+        final simulator = !androidInfo.isPhysicalDevice;
+        return 'Android $release (SDK $sdkInt), $manufacturer $model, (simulator: $simulator)';
       case TargetPlatform.fuchsia:
         final fuchsiaInfo = await DeviceInfoPlugin().androidInfo;
         final release = fuchsiaInfo.version.release;
         final sdkInt = fuchsiaInfo.version.sdkInt;
         final manufacturer = fuchsiaInfo.manufacturer;
         final model = fuchsiaInfo.model;
-        return 'Fuchsia $release (SDK $sdkInt), $manufacturer $model';
+        final simulator = !fuchsiaInfo.isPhysicalDevice;
+        return 'Fuchsia $release (SDK $sdkInt), $manufacturer $model, (simulator: $simulator)';
       case TargetPlatform.iOS:
         var iosInfo = await DeviceInfoPlugin().iosInfo;
         var systemName = iosInfo.systemName;
         var version = iosInfo.systemVersion;
         var name = iosInfo.name;
         var model = iosInfo.model;
-        return '$systemName $version, $name $model';
+        var simulator = !iosInfo.isPhysicalDevice;
+        return '$systemName $version, $name $model, (simulator: $simulator)';
       case TargetPlatform.linux:
         final info = await DeviceInfoPlugin().linuxInfo;
         return info.prettyName;
