@@ -1,3 +1,6 @@
+## 3.3.1
+* Updated dependencies.
+
 ## 3.3.0
 * Added if the mobile's device is a simulator.
 * Updated dependencies.
