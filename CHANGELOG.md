@@ -1,3 +1,10 @@
+## 3.4.0
+* BREAKING CHANGE: deviceInfo() has been renamed by deviceInfoDetails().
+* Updated dependencies.
+* Documentation improved.
+* Added Testing.
+* 
+
 ## 3.3.1
 * Updated dependencies.
 

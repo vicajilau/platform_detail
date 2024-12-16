@@ -10,7 +10,25 @@ enum DeviceTheme { light, dark }
 
 /// Allows you to determine platform details such as operating system or environment.
 class PlatformDetail {
-  /// This parameter returns an enum with the group of platform related.
+
+  /// Instance of `DeviceInfoPlugin` used to retrieve platform-specific device information.
+  /// In production, it uses the default implementation.
+  /// For testing, a mock can be injected via the `PlatformDetail.forTesting` factory constructor.
+  static DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
+
+  /// Instance of `DeviceInfoPlugin` used to retrieve platform-specific device information.
+  /// In production, it uses the default implementation.
+  /// For testing, a mock can be injected via the `PlatformDetail.forTesting` factory constructor.
+  static PlatformDispatcher _platformDispatcher = SchedulerBinding.instance.platformDispatcher;
+
+  /// Testing purposes!!!
+  /// Allows injecting a mocked `DeviceInfoPlugin` and `PlatformDispatcher`.
+  static forTesting(DeviceInfoPlugin mockDeviceInfo, PlatformDispatcher mockPlatformDispatcher){
+    _deviceInfo = mockDeviceInfo;
+    _platformDispatcher = mockPlatformDispatcher;
+  }
+
+  /// Returns an enum with the group of platform related.
   static PlatformGroup get currentGroupPlatform {
     if (isWeb) {
       return PlatformGroup.web;
@@ -22,7 +40,7 @@ class PlatformDetail {
     throw Exception('Platform ($defaultTargetPlatform) unrecognized.');
   }
 
-  /// This parameter returns the current platform.
+  /// Returns the current platform type (e.g., Android, iOS, etc.).
   static TargetPlatform get currentPlatform {
     return defaultTargetPlatform;
   }
@@ -39,7 +57,8 @@ class PlatformDetail {
     throw Exception('Platform ($defaultTargetPlatform) unrecognized.');
   }
 
-  /// This parameter checks if the current platform is macos, linux or windows. THE WEB PLATFORM IS NOT INCLUDED!
+  /// Checks if the current platform is a desktop OS.
+  /// Includes macOS, Linux, and Windows.
   static bool get isDesktop =>
       defaultTargetPlatform == TargetPlatform.macOS ||
       defaultTargetPlatform == TargetPlatform.linux ||
@@ -51,7 +70,7 @@ class PlatformDetail {
       defaultTargetPlatform == TargetPlatform.android ||
       defaultTargetPlatform == TargetPlatform.fuchsia;
 
-  /// This parameter checks if the current platform is web or not.
+  /// Checks if the current platform is Web.
   static bool get isWeb => kIsWeb;
 
   /// This parameter calls the isDesktop and isMobile methods to detect if the current platform is desktop or web.
@@ -75,7 +94,8 @@ class PlatformDetail {
   /// Check if the platform on which the code is running is macOS.
   static bool get isMacOS => defaultTargetPlatform == TargetPlatform.macOS;
 
-  /// This parameter returns the industrial name and OS version of the current device.
+  /// Fetches detailed device information.
+  /// The format varies depending on the platform.
   /// EXAMPLES:
   /// Android: Android 9 (SDK 28), Xiaomi Redmi Note 7
   /// iOS: iOS 13.1, iPhone 11 Pro Max iPhone
@@ -83,64 +103,47 @@ class PlatformDetail {
   /// Linux: Fedora 17 (Beefy Miracle)
   /// Windows: Windows 10 Home (1903)
   /// MacOS: macOS 13.5, MacBook Pro
-  static Future<String> deviceInfo() async {
+  /// Fetches detailed device information.
+  /// The format varies depending on the platform.
+  static Future<String> deviceInfoDetails() async {
     if (PlatformDetail.isWeb) {
-      final info = await DeviceInfoPlugin().webBrowserInfo;
+      final info = await _deviceInfo.webBrowserInfo;
       return '${info.browserName.name} (${info.appVersion})';
     }
 
-    switch (PlatformDetail.currentPlatform) {
+    switch (currentPlatform) {
       case TargetPlatform.android:
-        final androidInfo = await DeviceInfoPlugin().androidInfo;
-        final release = androidInfo.version.release;
-        final sdkInt = androidInfo.version.sdkInt;
-        final manufacturer = androidInfo.manufacturer;
-        final model = androidInfo.model;
-        final simulator = !androidInfo.isPhysicalDevice;
-        return 'Android $release (SDK $sdkInt), $manufacturer $model, (simulator: $simulator)';
-      case TargetPlatform.fuchsia:
-        final fuchsiaInfo = await DeviceInfoPlugin().androidInfo;
-        final release = fuchsiaInfo.version.release;
-        final sdkInt = fuchsiaInfo.version.sdkInt;
-        final manufacturer = fuchsiaInfo.manufacturer;
-        final model = fuchsiaInfo.model;
-        final simulator = !fuchsiaInfo.isPhysicalDevice;
-        return 'Fuchsia $release (SDK $sdkInt), $manufacturer $model, (simulator: $simulator)';
+        final androidInfo = await _deviceInfo.androidInfo;
+        return 'Android ${androidInfo.version.release} (SDK ${androidInfo.version.sdkInt}), '
+            '${androidInfo.manufacturer} ${androidInfo.model}, (simulator: ${!androidInfo.isPhysicalDevice})';
       case TargetPlatform.iOS:
-        var iosInfo = await DeviceInfoPlugin().iosInfo;
-        var systemName = iosInfo.systemName;
-        var version = iosInfo.systemVersion;
-        var name = iosInfo.name;
-        var model = iosInfo.model;
-        var simulator = !iosInfo.isPhysicalDevice;
-        return '$systemName $version, $name $model, (simulator: $simulator)';
+        final iosInfo = await _deviceInfo.iosInfo;
+        return '${iosInfo.systemName} ${iosInfo.systemVersion}, ${iosInfo.name} ${iosInfo.model}, (simulator: ${!iosInfo.isPhysicalDevice})';
       case TargetPlatform.linux:
-        final info = await DeviceInfoPlugin().linuxInfo;
-        return info.prettyName;
+        final linuxInfo = await _deviceInfo.linuxInfo;
+        return linuxInfo.prettyName;
       case TargetPlatform.macOS:
-        final info = await DeviceInfoPlugin().macOsInfo;
-        return "macOS ${info.osRelease}, ${info.model}";
+        final macosInfo = await _deviceInfo.macOsInfo;
+        return "macOS ${macosInfo.osRelease}, ${macosInfo.model}";
       case TargetPlatform.windows:
-        final info = await DeviceInfoPlugin().windowsInfo;
-        return "${info.productName}(${info.releaseId})";
+        final windowsInfo = await _deviceInfo.windowsInfo;
+        return "${windowsInfo.productName}(${windowsInfo.releaseId})";
+      default:
+        throw Exception('Platform ($currentPlatform) not recognized.');
     }
   }
 
-  /// Check if the device has enabled Dark Mode.
-  static bool get isDarkMode {
-    var brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    return brightness == Brightness.dark;
-  }
+  /// Checks if the device is in Dark Mode.
+  static bool get isDarkMode =>
+      _platformDispatcher.platformBrightness ==
+      Brightness.dark;
 
-  /// Check if the device has Light Mode.
-  static bool get isLightMode {
-    var brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    return brightness == Brightness.light;
-  }
+  /// Checks if the device is in Light Mode.
+  static bool get isLightMode =>
+      _platformDispatcher.platformBrightness ==
+          Brightness.light;
 
-  /// Returns the type of theme applied to the device.
+  /// Returns the current theme of the device (Light or Dark).
   static DeviceTheme get theme =>
       isLightMode ? DeviceTheme.light : DeviceTheme.dark;
 }
