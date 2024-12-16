@@ -4,6 +4,7 @@
 * Documentation improved.
 * Added Testing.
 * Code refactoring.
+* Updated Readme.
 
 ## 3.3.1
 * Updated dependencies.

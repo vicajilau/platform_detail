@@ -83,7 +83,7 @@ if (PlatformDetail.isMacOS) {
 ### Get a device description
 If you need more detailed information about the device and operating system it is running on. In web you will get information from the browser:
 ```dart
-final descriptionDevice = await PlatformDetail.deviceInfo();
+final descriptionDevice = await PlatformDetail.deviceInfoDetails();
 ```
 
 ### Light/Dark Mode
