@@ -1,7 +1,7 @@
 A library for getting platform details.
 
 [![pub package](https://img.shields.io/pub/v/http.svg)](https://pub.dev/packages/platform_detail)
-![CI Status](https://github.com/vicajilau/platform_detail/actions/workflows/flutter_workflow.yml/badge.svg?branch=main)
+![CI Status](https://github.com/vicajilau/platform_detail/actions/workflows/flutter_workflow.yml/badge.svg)
 
 This lightweight package allows in a very simple and optimized way to obtain details about the platform on which it is running. It's multi-platform, and supports mobile, desktop,
 and the browser.
