@@ -1,6 +1,7 @@
 A library for getting platform details.
 
 [![pub package](https://img.shields.io/pub/v/http.svg)](https://pub.dev/packages/platform_detail)
+![CI Status](https://img.shields.io/github/workflow/status/vicajilau/platform_detail/flutter_workflow)
 
 This lightweight package allows in a very simple and optimized way to obtain details about the platform on which it is running. It's multi-platform, and supports mobile, desktop,
 and the browser.
