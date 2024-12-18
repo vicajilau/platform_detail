@@ -10,7 +10,6 @@ enum DeviceTheme { light, dark }
 
 /// Allows you to determine platform details such as operating system or environment.
 class PlatformDetail {
-
   /// Instance of `DeviceInfoPlugin` used to retrieve platform-specific device information.
   /// In production, it uses the default implementation.
   /// For testing, a mock can be injected via the `PlatformDetail.forTesting` factory constructor.
@@ -19,11 +18,13 @@ class PlatformDetail {
   /// Instance of `DeviceInfoPlugin` used to retrieve platform-specific device information.
   /// In production, it uses the default implementation.
   /// For testing, a mock can be injected via the `PlatformDetail.forTesting` factory constructor.
-  static PlatformDispatcher _platformDispatcher = SchedulerBinding.instance.platformDispatcher;
+  static PlatformDispatcher _platformDispatcher =
+      SchedulerBinding.instance.platformDispatcher;
 
   /// Testing purposes!!!
   /// Allows injecting a mocked `DeviceInfoPlugin` and `PlatformDispatcher`.
-  static forTesting(DeviceInfoPlugin mockDeviceInfo, PlatformDispatcher mockPlatformDispatcher){
+  static forTesting(DeviceInfoPlugin mockDeviceInfo,
+      PlatformDispatcher mockPlatformDispatcher) {
     _deviceInfo = mockDeviceInfo;
     _platformDispatcher = mockPlatformDispatcher;
   }
@@ -133,15 +134,45 @@ class PlatformDetail {
     }
   }
 
+  /// Fetches detailed device information.
+  /// The format varies depending on the platform.
+  /// EXAMPLES:
+  /// Android: Android 9 (SDK 28), Xiaomi Redmi Note 7
+  /// iOS: iOS 13.1, iPhone 11 Pro Max iPhone
+  /// Web: Google Chrome (115.0.5790.170)
+  /// Linux: Fedora 17 (Beefy Miracle)
+  /// Windows: Windows 10 Home (1903)
+  /// MacOS: macOS 13.5, MacBook Pro
+  /// Fetches detailed device information.
+  /// The format varies depending on the platform.
+  static Future<BaseDeviceInfo> deviceInfo() async {
+    if (PlatformDetail.isWeb) {
+      return await _deviceInfo.webBrowserInfo;
+    }
+
+    switch (currentPlatform) {
+      case TargetPlatform.android:
+        return await _deviceInfo.androidInfo;
+      case TargetPlatform.iOS:
+        return await _deviceInfo.iosInfo;
+      case TargetPlatform.linux:
+        return await _deviceInfo.linuxInfo;
+      case TargetPlatform.macOS:
+        return await _deviceInfo.macOsInfo;
+      case TargetPlatform.windows:
+        return await _deviceInfo.windowsInfo;
+      default:
+        throw Exception('Platform ($currentPlatform) not recognized.');
+    }
+  }
+
   /// Checks if the device is in Dark Mode.
   static bool get isDarkMode =>
-      _platformDispatcher.platformBrightness ==
-      Brightness.dark;
+      _platformDispatcher.platformBrightness == Brightness.dark;
 
   /// Checks if the device is in Light Mode.
   static bool get isLightMode =>
-      _platformDispatcher.platformBrightness ==
-          Brightness.light;
+      _platformDispatcher.platformBrightness == Brightness.light;
 
   /// Returns the current theme of the device (Light or Dark).
   static DeviceTheme get theme =>
