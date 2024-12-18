@@ -95,17 +95,22 @@ class PlatformDetail {
   /// Check if the platform on which the code is running is macOS.
   static bool get isMacOS => defaultTargetPlatform == TargetPlatform.macOS;
 
-  /// Fetches detailed device information.
-  /// The format varies depending on the platform.
-  /// EXAMPLES:
+  /// Retrieves detailed device information based on the current platform.
+  ///
+  /// This method is asynchronous and returns a [BaseDeviceInfo] object containing
+  /// platform-specific details about the device. Depending on the platform, it will return:
   /// Android: Android 9 (SDK 28), Xiaomi Redmi Note 7
   /// iOS: iOS 13.1, iPhone 11 Pro Max iPhone
   /// Web: Google Chrome (115.0.5790.170)
   /// Linux: Fedora 17 (Beefy Miracle)
   /// Windows: Windows 10 Home (1903)
   /// MacOS: macOS 13.5, MacBook Pro
-  /// Fetches detailed device information.
-  /// The format varies depending on the platform.
+  ///
+  /// Throws:
+  /// - An [Exception] if the platform is not recognized or unsupported.
+  ///
+  /// Returns:
+  /// - A [Future<String>] with detailed information about the device.
   static Future<String> deviceInfoDetails() async {
     if (PlatformDetail.isWeb) {
       final info = await _deviceInfo.webBrowserInfo;
@@ -134,17 +139,22 @@ class PlatformDetail {
     }
   }
 
-  /// Fetches detailed device information.
-  /// The format varies depending on the platform.
-  /// EXAMPLES:
-  /// Android: Android 9 (SDK 28), Xiaomi Redmi Note 7
-  /// iOS: iOS 13.1, iPhone 11 Pro Max iPhone
-  /// Web: Google Chrome (115.0.5790.170)
-  /// Linux: Fedora 17 (Beefy Miracle)
-  /// Windows: Windows 10 Home (1903)
-  /// MacOS: macOS 13.5, MacBook Pro
-  /// Fetches detailed device information.
-  /// The format varies depending on the platform.
+  /// Retrieves detailed device information based on the current platform.
+  ///
+  /// This method is asynchronous and returns a [BaseDeviceInfo] object containing
+  /// platform-specific details about the device. Depending on the platform, it will return:
+  /// - [WebBrowserInfo] for web platforms.
+  /// - [AndroidDeviceInfo] for Android devices.
+  /// - [IosDeviceInfo] for iOS devices.
+  /// - [LinuxDeviceInfo] for Linux systems.
+  /// - [MacOsDeviceInfo] for macOS systems.
+  /// - [WindowsDeviceInfo] for Windows systems.
+  ///
+  /// Throws:
+  /// - An [Exception] if the platform is not recognized or unsupported.
+  ///
+  /// Returns:
+  /// - A [Future<BaseDeviceInfo>] with detailed information about the device.
   static Future<BaseDeviceInfo> deviceInfo() async {
     if (PlatformDetail.isWeb) {
       return await _deviceInfo.webBrowserInfo;
