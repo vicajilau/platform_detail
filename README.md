@@ -13,7 +13,7 @@
     <img src="https://img.shields.io/github/actions/workflow/status/vicajilau/platform_detail/dart_analyze_unit_test.yml?branch=main&label=CI&labelColor=333940&logo=github" alt="CI Status">
   </a>
   <a href="https://github.com/vicajilau/platform_detail/actions/workflows/publish_pub_dev.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/vicajilau/platform_detail/publish_pub_dev.yml?branch=main&label=CD&labelColor=333940&logo=github" alt="CD Status">
+    <img src="https://img.shields.io/github/actions/workflow/status/vicajilau/platform_detail/publish_pub_dev.yml?label=CD&labelColor=333940&logo=github" alt="CD Status">
   </a>
   <a href="https://codecov.io/gh/vicajilau/pdf_combiner">
     <img src="https://img.shields.io/codecov/c/github/vicajilau/platform_detail?logo=codecov&logoColor=fff&labelColor=333940" alt="Code Coverage">
