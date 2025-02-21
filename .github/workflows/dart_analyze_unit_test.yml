@@ -1,19 +1,15 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+name: Dart Analyze + Unit Test
 
-name: Flutter CI
-
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+on: push
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  analyze-unit-test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        sdk: [stable]
 
     steps:
       - uses: actions/checkout@v4
@@ -21,11 +17,14 @@ jobs:
       - name: Setup Flutter SDK
         uses: flutter-actions/setup-flutter@v4
 
-      - name: Install Dependencies
+      - name: Print Dart SDK version
+        run: dart --version
+
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Analyze Project Source
-        run: flutter analyze
+      - name: Analyze code
+        run: dart analyze
 
       - name: Run Unit tests
         run: flutter test --coverage
