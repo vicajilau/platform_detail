@@ -14,7 +14,7 @@ void main() {
     late MockDeviceInfoPlugin mockDeviceInfo;
     late MockPlatformDispatcher mockPlatformDispatcher;
 
-    setUp(() {
+    setUpAll(() {
       mockDeviceInfo = MockDeviceInfoPlugin();
       mockPlatformDispatcher = MockPlatformDispatcher();
       PlatformDetail.forTesting(mockDeviceInfo, mockPlatformDispatcher);
@@ -91,6 +91,125 @@ void main() {
       }
     });
 
-    // Agrega pruebas similares para Android, iOS, Linux, macOS y Windows
+    test('isLightMode returns true when brightness is dark', () {
+      when(() => mockPlatformDispatcher.platformBrightness)
+          .thenReturn(Brightness.light);
+      expect(PlatformDetail.theme, equals(DeviceTheme.light));
+    });
+
+    test('isDarkMode returns true when brightness is dark', () {
+      when(() => mockPlatformDispatcher.platformBrightness)
+          .thenReturn(Brightness.dark);
+      expect(PlatformDetail.isDarkMode, isTrue);
+    });
+
+    test('isLightMode returns true when brightness is light', () {
+      when(() => mockPlatformDispatcher.platformBrightness)
+          .thenReturn(Brightness.light);
+      expect(PlatformDetail.isLightMode, isTrue);
+    });
+
+    test('currentPlatform returns the correct platform', () {
+      for (var platform in TargetPlatform.values) {
+        debugDefaultTargetPlatformOverride = platform;
+        expect(PlatformDetail.currentPlatform, equals(platform));
+      }
+    });
+
+    test('currentGroupPlatform returns correct PlatformGroup', () {
+      for (var platform in TargetPlatform.values) {
+        debugDefaultTargetPlatformOverride = platform;
+
+        if (PlatformDetail.isWeb) {
+          expect(
+              PlatformDetail.currentGroupPlatform, equals(PlatformGroup.web));
+        } else if (PlatformDetail.isDesktop) {
+          expect(PlatformDetail.currentGroupPlatform,
+              equals(PlatformGroup.desktop));
+        } else if (PlatformDetail.isMobile) {
+          expect(PlatformDetail.currentGroupPlatform,
+              equals(PlatformGroup.mobile));
+        }
+      }
+    });
+
+    test('isWindows returns true only when platform is Windows', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      expect(PlatformDetail.isWindows, isTrue);
+
+      for (var platform in TargetPlatform.values) {
+        if (platform != TargetPlatform.windows) {
+          debugDefaultTargetPlatformOverride = platform;
+          expect(PlatformDetail.isWindows, isFalse);
+        }
+      }
+    });
+
+    test('isMacOS returns true only when platform is macOS', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      expect(PlatformDetail.isMacOS, isTrue);
+
+      for (var platform in TargetPlatform.values) {
+        if (platform != TargetPlatform.macOS) {
+          debugDefaultTargetPlatformOverride = platform;
+          expect(PlatformDetail.isMacOS, isFalse);
+        }
+      }
+    });
+
+    test('isLinux returns true only when platform is Linux', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+      expect(PlatformDetail.isLinux, isTrue);
+
+      for (var platform in TargetPlatform.values) {
+        if (platform != TargetPlatform.linux) {
+          debugDefaultTargetPlatformOverride = platform;
+          expect(PlatformDetail.isLinux, isFalse);
+        }
+      }
+    });
+
+    test('isAndroid returns true only when platform is Android', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      expect(PlatformDetail.isAndroid, isTrue);
+
+      for (var platform in TargetPlatform.values) {
+        if (platform != TargetPlatform.android) {
+          debugDefaultTargetPlatformOverride = platform;
+          expect(PlatformDetail.isAndroid, isFalse);
+        }
+      }
+    });
+
+    test('isIOS returns true only when platform is iOS', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      expect(PlatformDetail.isIOS, isTrue);
+
+      for (var platform in TargetPlatform.values) {
+        if (platform != TargetPlatform.iOS) {
+          debugDefaultTargetPlatformOverride = platform;
+          expect(PlatformDetail.isIOS, isFalse);
+        }
+      }
+    });
+
+    test('deviceInfo calls correct method for each platform', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      expect(await PlatformDetail.deviceInfo(), isA<AndroidDeviceInfo>());
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      expect(await PlatformDetail.deviceInfo(), isA<IosDeviceInfo>());
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+      expect(await PlatformDetail.deviceInfo(), isA<LinuxDeviceInfo>());
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      expect(await PlatformDetail.deviceInfo(), isA<MacOsDeviceInfo>());
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      expect(await PlatformDetail.deviceInfo(), isA<WindowsDeviceInfo>());
+
+      expect(await PlatformDetail.deviceInfo(), isA<WebBrowserInfo>());
+    });
   });
 }
