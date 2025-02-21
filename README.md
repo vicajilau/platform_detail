@@ -18,36 +18,40 @@ If you just need to know if it's mobile, desktop, web, or even desktop/web. You 
 ```dart
 import 'package:platform_detail/platform_detail.dart';
 
-if (PlatformDetail.isMobile) {
-  print('The current platform is Mobile');
-}  
+void main() {
+  if (PlatformDetail.isMobile) {
+    print('The current platform is Mobile');
+  }
 
-if (PlatformDetail.isDesktopOrWeb) {
-  print('The current platform is Desktop or Web');
-}
+  if (PlatformDetail.isDesktopOrWeb) {
+    print('The current platform is Desktop or Web');
+  }
 
-if (PlatformDetail.isDesktop) {
-  print('The current platform is Desktop');
-}
+  if (PlatformDetail.isDesktop) {
+    print('The current platform is Desktop');
+  }
 
-if (PlatformDetail.isWeb) {
-  print('The current platform is web');
+  if (PlatformDetail.isWeb) {
+    print('The current platform is web');
+  }
 }
 ```
 
 In addition, you can also use the enum in the [PlatformGroup][] to which it belongs. That is, if it is web, mobile or desktop:
 
 ```dart
-switch (PlatformDetails.currentGroupPlatform) {
-  case PlatformGroup.mobile:
-    print('The current group platform is mobile');
-    break;
-  case PlatformGroup.web:
-    print('The current group platform is web');
-    break;
-  case PlatformGroup.desktop:
-    print('The current group platform is desktop');
-    break;
+void main() {
+  switch (PlatformDetails.currentGroupPlatform) {
+    case PlatformGroup.mobile:
+      print('The current group platform is mobile');
+      break;
+    case PlatformGroup.web:
+      print('The current group platform is web');
+      break;
+    case PlatformGroup.desktop:
+      print('The current group platform is desktop');
+      break;
+  }
 }
 ```
 
@@ -55,28 +59,30 @@ switch (PlatformDetails.currentGroupPlatform) {
 If instead you want to ask individually for each platform supported by Flutter:
 
 ```dart
-if (PlatformDetail.isIOS) {
-  print('The current platform is iOS');
-}
+void main() {
+  if (PlatformDetail.isIOS) {
+    print('The current platform is iOS');
+  }
 
-if (PlatformDetail.isAndroid) {
-  print('The current platform is Android');
-}
+  if (PlatformDetail.isAndroid) {
+    print('The current platform is Android');
+  }
 
-if (PlatformDetail.isFuchsia) {
-  print('The current platform is Fuchsia');
-}
+  if (PlatformDetail.isFuchsia) {
+    print('The current platform is Fuchsia');
+  }
 
-if (PlatformDetail.isWindows) {
-  print('The current platform is Windows');
-}
+  if (PlatformDetail.isWindows) {
+    print('The current platform is Windows');
+  }
 
-if (PlatformDetail.isLinux) {
-  print('The current platform is Linux');
-}
+  if (PlatformDetail.isLinux) {
+    print('The current platform is Linux');
+  }
 
-if (PlatformDetail.isMacOS) {
-  print('The current platform is macOS');
+  if (PlatformDetail.isMacOS) {
+    print('The current platform is macOS');
+  }
 }
 ```
 
@@ -84,11 +90,15 @@ if (PlatformDetail.isMacOS) {
 ### Get a device description
 If you need more detailed information about the device and operating system it is running on.
 ```dart
-final descriptionDevice = await PlatformDetail.deviceInfo();
+void main() async {
+  final descriptionDevice = await PlatformDetail.deviceInfo();
+}
 ```
 Or maybe you need an information string about the device info:
 ```dart
-final descriptionDevice = await PlatformDetail.deviceInfoDetails();
+void main() async {
+  final descriptionDevice = await PlatformDetail.deviceInfoDetails();
+}
 ```
 This will return something like this:
 - Android: Android 9 (SDK 28), Xiaomi Redmi Note 7
@@ -102,24 +112,28 @@ This will return something like this:
 You can detect too if the device is configured in light or dark mode:
 
 ```dart
-if (PlatformDetail.isLightMode) {
-  print('The current platform is configured with light mode');
-}
+void main() {
+  if (PlatformDetail.isLightMode) {
+    print('The current platform is configured with light mode');
+  }
 
-if (PlatformDetail.isDarkMode) {
-print('The current platform is configured with dark mode');
+  if (PlatformDetail.isDarkMode) {
+    print('The current platform is configured with dark mode');
+  }
 }
 ```
 
 Also, you can use the [DeviceTheme][] enum for this:
 
 ```dart
-if (PlatformDetail.theme == DeviceTheme.light) {
-  print('The current device is configured in light mode');
-}
+void main() {
+  if (PlatformDetail.theme == DeviceTheme.light) {
+    print('The current device is configured in light mode');
+  }
 
-if (PlatformDetail.theme == DeviceTheme.dark) {
-print('The current device is configured in dark mode');
+  if (PlatformDetail.theme == DeviceTheme.dark) {
+    print('The current device is configured in dark mode');
+  }
 }
 ```
 

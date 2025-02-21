@@ -1,3 +1,7 @@
+## 4.2.0
+* Maximized Dart SDK versions support (>=2.15).
+* Improved documentation.
+
 ## 4.1.0
 * Example project created.
 * Fixed linting issue.
