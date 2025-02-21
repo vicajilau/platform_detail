@@ -2,6 +2,7 @@
 * Maximized Dart SDK versions support (>=2.15).
 * Fixed: The platform on which the website was running was detected by checking the web operating system.
 * Improved documentation.
+* Added coverage.
 
 ## 4.1.0
 * Example project created.

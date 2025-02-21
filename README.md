@@ -1,10 +1,27 @@
-A library for getting platform details.
+<p align="center">
+  <a href="https://pub.dev/packages/pdf_combiner">
+    <img src="https://raw.githubusercontent.com/vicajilau/pdf_combiner/main/.github/assets/pdf_combiner.png" height="200" alt="PDF Combiner Logo">
+  </a>
+  <h1 align="center">PDF Combiner</h1>
+</p>
 
-[![pub package](https://img.shields.io/pub/v/http.svg)](https://pub.dev/packages/platform_detail)
-![CI Status](https://github.com/vicajilau/platform_detail/actions/workflows/flutter_workflow.yml/badge.svg)
+<p align="center">
+  <a href="https://pub.dev/packages/pdf_combiner">
+    <img src="https://img.shields.io/pub/v/pdf_combiner?label=pub.dev&labelColor=333940&logo=dart" alt="Pub Version">
+  </a>
+  <a href="https://github.com/vicajilau/pdf_combiner/actions/workflows/dart_analyze_unit_test.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/vicajilau/pdf_combiner/dart_analyze_unit_test.yml?branch=main&label=CI&labelColor=333940&logo=github" alt="CI Status">
+  </a>
+  <a href="https://github.com/vicajilau/pdf_combiner/actions/workflows/publish_pub_dev.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/vicajilau/pdf_combiner/publish_pub_dev.yml?label=CD&labelColor=333940&logo=github" alt="CD Status">
+  </a>
+  <a href="https://codecov.io/gh/vicajilau/pdf_combiner">
+    <img src="https://img.shields.io/codecov/c/github/vicajilau/pdf_combiner?logo=codecov&logoColor=fff&labelColor=333940" alt="Code Coverage">
+  </a>
+</p>
 
-This lightweight package allows in a very simple and optimized way to obtain details about the platform on which it is running. It's multi-platform, and supports mobile, desktop,
-and the browser.
+A lightweight Flutter package that provides an easy and optimized way to retrieve details about the platform it’s running on. 
+It supports multiple platforms, including mobile, desktop, and web.
 
 ## Using
 
