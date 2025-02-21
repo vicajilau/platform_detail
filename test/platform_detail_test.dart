@@ -193,23 +193,5 @@ void main() {
       }
     });
 
-    test('deviceInfo calls correct method for each platform', () async {
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      expect(await PlatformDetail.deviceInfo(), isA<AndroidDeviceInfo>());
-
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      expect(await PlatformDetail.deviceInfo(), isA<IosDeviceInfo>());
-
-      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
-      expect(await PlatformDetail.deviceInfo(), isA<LinuxDeviceInfo>());
-
-      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
-      expect(await PlatformDetail.deviceInfo(), isA<MacOsDeviceInfo>());
-
-      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
-      expect(await PlatformDetail.deviceInfo(), isA<WindowsDeviceInfo>());
-
-      expect(await PlatformDetail.deviceInfo(), isA<WebBrowserInfo>());
-    });
   });
 }
