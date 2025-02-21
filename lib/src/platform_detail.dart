@@ -60,40 +60,50 @@ class PlatformDetail {
 
   /// Checks if the current platform is a desktop OS.
   /// Includes macOS, Linux, and Windows.
-  static bool get isDesktop =>
-      defaultTargetPlatform == TargetPlatform.macOS ||
-      defaultTargetPlatform == TargetPlatform.linux ||
-      defaultTargetPlatform == TargetPlatform.windows;
+  static bool get isDesktop {
+    if (kIsWeb) return false;
+    return defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.linux ||
+        defaultTargetPlatform == TargetPlatform.windows;
+  }
 
   /// This parameter checks if the current platform is iOS, Android or Fuchsia.
-  static bool get isMobile =>
-      defaultTargetPlatform == TargetPlatform.iOS ||
-      defaultTargetPlatform == TargetPlatform.android ||
-      defaultTargetPlatform == TargetPlatform.fuchsia;
+  static bool get isMobile {
+    if (kIsWeb) return false;
+    return defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.fuchsia;
+  }
 
   /// Checks if the current platform is Web.
   static bool get isWeb => kIsWeb;
 
   /// This parameter calls the isDesktop and isMobile methods to detect if the current platform is desktop or web.
-  static bool get isDesktopOrWeb => isDesktop || isWeb;
+  static bool get isDesktopOrWeb => isWeb || isDesktop;
 
   /// Check if the platform on which the code is running is iOS.
-  static bool get isIOS => defaultTargetPlatform == TargetPlatform.iOS;
+  static bool get isIOS =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
   /// Check if the platform on which the code is running is Android.
-  static bool get isAndroid => defaultTargetPlatform == TargetPlatform.android;
+  static bool get isAndroid =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
   /// Check if the platform on which the code is running is Fuchsia.
-  static bool get isFuchsia => defaultTargetPlatform == TargetPlatform.fuchsia;
+  static bool get isFuchsia =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.fuchsia;
 
   /// Check if the platform on which the code is running is Windows.
-  static bool get isWindows => defaultTargetPlatform == TargetPlatform.windows;
+  static bool get isWindows =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.windows;
 
   /// Check if the platform on which the code is running is Linux.
-  static bool get isLinux => defaultTargetPlatform == TargetPlatform.linux;
+  static bool get isLinux =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.linux;
 
   /// Check if the platform on which the code is running is macOS.
-  static bool get isMacOS => defaultTargetPlatform == TargetPlatform.macOS;
+  static bool get isMacOS =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.macOS;
 
   /// Retrieves detailed device information based on the current platform.
   ///
