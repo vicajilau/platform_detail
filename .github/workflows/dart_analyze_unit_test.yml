@@ -33,4 +33,4 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: vicajilau/pdf_combiner
+          slug: vicajilau/platform_detail
