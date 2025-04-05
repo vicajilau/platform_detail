@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
@@ -197,4 +200,40 @@ class PlatformDetail {
   /// Returns the current theme of the device (Light or Dark).
   static DeviceTheme get theme =>
       isLightMode ? DeviceTheme.light : DeviceTheme.dark;
+
+  /// Returns the current public IP of the device.
+  static Future<String?> get getPublicIp async {
+    try {
+      final url = Uri.parse('https://api64.ipify.org');
+      final request = await HttpClient().getUrl(url);
+      final response = await request.close();
+
+      if (response.statusCode == 200) {
+        final ip = await response.transform(const Utf8Decoder()).join();
+        return ip;
+      } else {
+        return null;
+      }
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Returns the current private IP List (without loopback) of the device.
+  static Future<List<String>> get getPrivateIp async {
+    try {
+      List<String> result = List.empty(growable: true);
+
+      final netInterfaceList = await NetworkInterface.list();
+      for (final netInterface in netInterfaceList) {
+        for (final address in netInterface.addresses) {
+          result.add(address.address);
+        }
+      }
+
+      return result;
+    } catch (_) {
+      return [];
+    }
+  }
 }
