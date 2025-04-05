@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,20 +11,105 @@ class MockDeviceInfoPlugin extends Mock implements DeviceInfoPlugin {}
 
 class MockPlatformDispatcher extends Mock implements PlatformDispatcher {}
 
+class MockHttpClient extends Mock implements HttpClient {}
+
+class MockHttpClientRequest extends Mock implements HttpClientRequest {}
+
+class MockHttpClientResponse extends Mock implements HttpClientResponse {}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group('PlatformDetail Tests', () {
     late MockDeviceInfoPlugin mockDeviceInfo;
     late MockPlatformDispatcher mockPlatformDispatcher;
+    late MockHttpClient mockHttpClient;
+    late MockHttpClientRequest mockHttpClientRequest;
+    late MockHttpClientResponse mockHttpClientResponse;
 
     setUpAll(() {
       mockDeviceInfo = MockDeviceInfoPlugin();
       mockPlatformDispatcher = MockPlatformDispatcher();
-      PlatformDetail.forTesting(mockDeviceInfo, mockPlatformDispatcher);
+      mockHttpClient = MockHttpClient();
+      mockHttpClientRequest = MockHttpClientRequest();
+      mockHttpClientResponse = MockHttpClientResponse();
+      PlatformDetail.forTesting(
+        mockDeviceInfo,
+        mockPlatformDispatcher,
+        mockHttpClient,
+      );
     });
 
     test('isWeb returns true when kIsWeb is true', () {
       expect(PlatformDetail.isWeb, equals(kIsWeb));
+    });
+
+    test(
+      'getPublicIp returns a valid IP address on success',
+      () async {
+        when(() => mockHttpClient.getUrl(
+              Uri.parse('https://api64.ipify.org'),
+            )).thenAnswer(
+          (_) async => mockHttpClientRequest,
+        );
+        when(
+          () => mockHttpClientRequest.close(),
+        ).thenAnswer(
+          (_) async => mockHttpClientResponse,
+        );
+
+        when(
+          () => mockHttpClientResponse.statusCode,
+        ).thenReturn(
+          200,
+        );
+        when(
+          () => mockHttpClientResponse.transform(utf8.decoder),
+        ).thenAnswer(
+          (_) => Stream.value('192.168.1.1'),
+        );
+
+        final result = await PlatformDetail.getPublicIp;
+
+        expect(result, '192.168.1.1');
+      },
+    );
+
+    test(
+      'getPublicIp returns null on failure',
+      () async {
+        when(() => mockHttpClient.getUrl(
+              Uri.parse('https://api64.ipify.org'),
+            )).thenAnswer(
+          (_) async => mockHttpClientRequest,
+        );
+        when(
+          () => mockHttpClientRequest.close(),
+        ).thenAnswer(
+          (_) async => mockHttpClientResponse,
+        );
+
+        when(
+          () => mockHttpClientResponse.statusCode,
+        ).thenReturn(
+          500,
+        );
+
+        final result = await PlatformDetail.getPublicIp;
+
+        expect(result, null);
+      },
+    );
+
+    test('getPublicIp handles exceptions and returns null', () async {
+      when(() => mockHttpClient.getUrl(
+            Uri.parse('https://api64.ipify.org'),
+          )).thenThrow(
+        SocketException('No Internet'),
+      );
+
+      final result = await PlatformDetail.getPublicIp;
+
+      expect(result, null);
     });
 
     test('isDesktop returns true for macOS, linux, and windows', () {
@@ -192,6 +280,5 @@ void main() {
         }
       }
     });
-
   });
 }
