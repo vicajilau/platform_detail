@@ -201,7 +201,7 @@ class PlatformDetail {
   static DeviceTheme get theme =>
       isLightMode ? DeviceTheme.light : DeviceTheme.dark;
 
-  /// Returns the current public IP of the device.
+  /// Returns the current public IP of the device (v4 or v6).
   static Future<String?> get getPublicIp async {
     try {
       final url = Uri.parse('https://api64.ipify.org');
