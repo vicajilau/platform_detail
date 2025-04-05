@@ -24,12 +24,21 @@ class PlatformDetail {
   static PlatformDispatcher _platformDispatcher =
       SchedulerBinding.instance.platformDispatcher;
 
+  /// Instance of `HttpClient` used to request Uri in IP getters.
+  /// In production, it uses the default implementation.
+  /// For testing, a mock can be injected via the `PlatformDetail.forTesting` factory constructor.
+  static HttpClient _httpClient = HttpClient();
+
   /// Testing purposes!!!
   /// Allows injecting a mocked `DeviceInfoPlugin` and `PlatformDispatcher`.
-  static forTesting(DeviceInfoPlugin mockDeviceInfo,
-      PlatformDispatcher mockPlatformDispatcher) {
+  static forTesting(
+    DeviceInfoPlugin mockDeviceInfo,
+    PlatformDispatcher mockPlatformDispatcher,
+    HttpClient httpClient,
+  ) {
     _deviceInfo = mockDeviceInfo;
     _platformDispatcher = mockPlatformDispatcher;
+    _httpClient = httpClient;
   }
 
   /// Returns an enum with the group of platform related.
@@ -205,7 +214,7 @@ class PlatformDetail {
   static Future<String?> get getPublicIp async {
     try {
       final url = Uri.parse('https://api64.ipify.org');
-      final request = await HttpClient().getUrl(url);
+      final request = await _httpClient.getUrl(url);
       final response = await request.close();
 
       if (response.statusCode == 200) {
