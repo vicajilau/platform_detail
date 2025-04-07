@@ -56,7 +56,33 @@ class _MyHomePageState extends State<MyHomePage> {
                   } else {
                     return Text('No data available');
                   }
-                })
+                }),
+            FutureBuilder(
+                future: PlatformDetail.getPrivateIp,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return Text('Private IP: ${snapshot.data}');
+                  } else {
+                    return Text('No private IP available');
+                  }
+                }),
+            FutureBuilder(
+                future: PlatformDetail.getPublicIp,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return Text('Public IP: ${snapshot.data}');
+                  } else {
+                    return Text('No public IP available');
+                  }
+                }),
           ],
         ),
       ),
