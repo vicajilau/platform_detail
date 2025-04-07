@@ -1,6 +1,8 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:platform_detail/src/platform_type.dart';
+import 'package:platform_detail/src/target_platform_extension.dart';
 
 import 'network/network_utils.dart';
 
@@ -23,13 +25,9 @@ class PlatformDetail {
   static PlatformDispatcher _platformDispatcher =
       SchedulerBinding.instance.platformDispatcher;
 
-  /// Instance of `HttpClient` used to request Uri in IP getters.
-  /// In production, it uses the default implementation.
-  /// For testing, a mock can be injected via the `PlatformDetail.forTesting` factory constructor.
-
   /// Testing purposes!!!
   /// Allows injecting a mocked `DeviceInfoPlugin` and `PlatformDispatcher`.
-  static forTesting(
+  static void forTesting(
     DeviceInfoPlugin mockDeviceInfo,
     PlatformDispatcher mockPlatformDispatcher,
   ) {
@@ -49,9 +47,10 @@ class PlatformDetail {
     throw Exception('Platform ($defaultTargetPlatform) unrecognized.');
   }
 
-  /// Returns the current platform type (e.g., Android, iOS, etc.).
-  static TargetPlatform get currentPlatform {
-    return defaultTargetPlatform;
+  /// Returns the current platform type, including support for web.
+  static PlatformType get currentPlatform {
+    if (kIsWeb) return PlatformType.web;
+    return defaultTargetPlatform.toPlatformType();
   }
 
   /// This parameter returns an enum with the group of platform related.
@@ -130,28 +129,26 @@ class PlatformDetail {
   /// Returns:
   /// - A [Future<String>] with detailed information about the device.
   static Future<String> deviceInfoDetails() async {
-    if (PlatformDetail.isWeb) {
-      final info = await _deviceInfo.webBrowserInfo;
-      return '${info.browserName.name} (${info.appVersion})';
-    }
-
     switch (currentPlatform) {
-      case TargetPlatform.android:
+      case PlatformType.android:
         final androidInfo = await _deviceInfo.androidInfo;
         return 'Android ${androidInfo.version.release} (SDK ${androidInfo.version.sdkInt}), '
             '${androidInfo.manufacturer} ${androidInfo.model}, (simulator: ${!androidInfo.isPhysicalDevice})';
-      case TargetPlatform.iOS:
+      case PlatformType.iOS:
         final iosInfo = await _deviceInfo.iosInfo;
         return '${iosInfo.systemName} ${iosInfo.systemVersion}, ${iosInfo.name} ${iosInfo.model}, (simulator: ${!iosInfo.isPhysicalDevice})';
-      case TargetPlatform.linux:
+      case PlatformType.linux:
         final linuxInfo = await _deviceInfo.linuxInfo;
         return linuxInfo.prettyName;
-      case TargetPlatform.macOS:
+      case PlatformType.macOS:
         final macosInfo = await _deviceInfo.macOsInfo;
         return "macOS ${macosInfo.osRelease}, ${macosInfo.model}";
-      case TargetPlatform.windows:
+      case PlatformType.windows:
         final windowsInfo = await _deviceInfo.windowsInfo;
         return "${windowsInfo.productName}(${windowsInfo.releaseId})";
+      case PlatformType.web:
+        final info = await _deviceInfo.webBrowserInfo;
+        return '${info.browserName.name} (${info.appVersion})';
       default:
         throw Exception('Platform ($currentPlatform) not recognized.');
     }
@@ -174,21 +171,19 @@ class PlatformDetail {
   /// Returns:
   /// - A [Future<BaseDeviceInfo>] with detailed information about the device.
   static Future<BaseDeviceInfo> deviceInfo() async {
-    if (PlatformDetail.isWeb) {
-      return await _deviceInfo.webBrowserInfo;
-    }
-
     switch (currentPlatform) {
-      case TargetPlatform.android:
+      case PlatformType.android:
         return await _deviceInfo.androidInfo;
-      case TargetPlatform.iOS:
+      case PlatformType.iOS:
         return await _deviceInfo.iosInfo;
-      case TargetPlatform.linux:
+      case PlatformType.linux:
         return await _deviceInfo.linuxInfo;
-      case TargetPlatform.macOS:
+      case PlatformType.macOS:
         return await _deviceInfo.macOsInfo;
-      case TargetPlatform.windows:
+      case PlatformType.windows:
         return await _deviceInfo.windowsInfo;
+      case PlatformType.web:
+        return await _deviceInfo.webBrowserInfo;
       default:
         throw Exception('Platform ($currentPlatform) not recognized.');
     }
@@ -207,7 +202,7 @@ class PlatformDetail {
       isLightMode ? DeviceTheme.light : DeviceTheme.dark;
 
   /// Returns the current public IP of the device (v4 or v6).
-  static Future<String?> get getPublicIp => NetworkUtils.getPublicIp;
+  static Future<String?> get getPublicIp => NetworkUtils.getPublicIp();
 
   /// Returns the current private IP List (without loopback) of the device.
   static Future<List<String>> get getPrivateIp => NetworkUtils.getPrivateIps();

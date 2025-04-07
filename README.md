@@ -25,7 +25,7 @@ It supports multiple platforms, including mobile, desktop, and web.
 
 ## Using
 
-The easiest way to use this library is to call the [PlatformDetail][] class as follows. 
+The easiest way to use this library is to call the [PlatformDetail] class as follows. 
 Multiple instances are not being created since thanks to a factory constructor it always 
 returns an internal singleton.
 

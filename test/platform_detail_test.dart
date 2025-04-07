@@ -34,8 +34,7 @@ void main() {
       mockHttpClientResponse = MockHttpClientResponse();
       PlatformDetail.forTesting(
         mockDeviceInfo,
-        mockPlatformDispatcher,
-        mockHttpClient,
+        mockPlatformDispatcher
       );
     });
 
