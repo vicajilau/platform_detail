@@ -30,6 +30,21 @@ Multiple instances are not being created since thanks to a factory constructor i
 returns an internal singleton.
 
 ### Detecting by type of platform
+If you just need to know if the current platform where Flutter is running.
+
+> **Note**: [`TargetPlatform`](https://api.flutter.dev/flutter/foundation/TargetPlatform-class.html) does not currently support the web, and in universal apps, this can be a limitation.  
+That’s why `PlatformType` is introduced as a wrapper to include **web** support seamlessly.
+
+```dart
+import 'package:platform_detail/platform_detail.dart';
+
+void main() {
+  PlatformType platform = PlatformDetail.currentPlatform;
+  print('This platform is: $platform'); // This platform is: PlatformType.android
+}
+```
+
+### Detecting each platform specifically
 If you just need to know if it's mobile, desktop, web, or even desktop/web. You will love:
 
 ```dart
