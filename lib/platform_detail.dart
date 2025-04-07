@@ -5,6 +5,8 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 
+import 'network_utils.dart';
+
 /// It groups in an enumerated list the type of platform on which a Flutter application can be run.
 enum PlatformGroup { mobile, desktop, web }
 
@@ -230,19 +232,6 @@ class PlatformDetail {
 
   /// Returns the current private IP List (without loopback) of the device.
   static Future<List<String>> get getPrivateIp async {
-    try {
-      List<String> result = List.empty(growable: true);
-
-      final netInterfaceList = await NetworkInterface.list();
-      for (final netInterface in netInterfaceList) {
-        for (final address in netInterface.addresses) {
-          result.add(address.address);
-        }
-      }
-
-      return result;
-    } catch (_) {
-      return [];
-    }
+    return await NetworkUtils.getPrivateIps();
   }
 }
