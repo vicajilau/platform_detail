@@ -1,3 +1,6 @@
+## 5.0.0
+* **BREAKING CHANGE**: `currentPlatform` no longer returns a `TargetPlatform`. It now returns a new custom enum: `PlatformType`, which includes `web` support.
+
 ## 4.2.0
 * Maximized Dart SDK versions support (>=2.15).
 * Fixed: The platform on which the website was running was detected by checking the web operating system.
@@ -11,7 +14,7 @@
 * Some minor improvements.
 
 ## 4.0.0
-* BREAKING CHANGE: `deviceInfo()` has been renamed by `deviceInfoDetails()`.
+* **BREAKING CHANGE:** `deviceInfo()` has been renamed by `deviceInfoDetails()`.
 * Updated dependencies.
 * Documentation improved.
 * Added Testing.

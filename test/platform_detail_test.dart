@@ -200,7 +200,7 @@ void main() {
     test('currentPlatform returns the correct platform', () {
       for (var platform in TargetPlatform.values) {
         debugDefaultTargetPlatformOverride = platform;
-        expect(PlatformDetail.currentPlatform, equals(platform));
+        expect(PlatformDetail.currentPlatform.name, equals(platform.name));
       }
     });
 
