@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
                   } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                    return Text('Error getting device info: ${snapshot.error}');
                   } else if (snapshot.hasData) {
                     return Text('Device Info: ${snapshot.data}');
                   } else {
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
                   } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                    return Text('Error getting private IP: ${snapshot.error}');
                   } else if (snapshot.hasData) {
                     return Text('Private IP: ${snapshot.data}');
                   } else {
@@ -76,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
                   } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
+                    return Text('Error getting public IP: ${snapshot.error}');
                   } else if (snapshot.hasData) {
                     return Text('Public IP: ${snapshot.data}');
                   } else {
