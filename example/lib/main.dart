@@ -65,6 +65,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   } else if (snapshot.hasError) {
                     return Text('Error getting private IP: ${snapshot.error}');
                   } else if (snapshot.hasData) {
+                    if (snapshot.data!.isEmpty) {
+                      return Text('Private IP: Unavailable');
+                    }
                     return Text('Private IP: ${snapshot.data}');
                   } else {
                     return Text('No private IP available');

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:platform_detail/platform_detail.dart';
 import 'package:platform_detail/src/network/dio_http_client.dart';
 
 /// A Network util to get IP addresses.
@@ -8,6 +9,9 @@ class NetworkUtils {
   static Future<List<String>> getPrivateIps({
     InternetAddressType version = InternetAddressType.IPv4,
   }) async {
+    if (PlatformDetail.isWeb) {
+      return [];
+    }
     final interfaces = await NetworkInterface.list(
       includeLoopback: false,
       type: version,
