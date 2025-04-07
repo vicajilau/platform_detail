@@ -1,16 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
-/// Extended platform enum that includes web support.
-enum PlatformType {
-  android,
-  iOS,
-  macOS,
-  windows,
-  linux,
-  fuchsia,
-  web,
-}
+import 'package:flutter/foundation.dart';
+
+import '../platform_detail.dart';
 
 /// Extension to convert from Flutter's TargetPlatform to PlatformType.
 extension PlatformTypeParser on TargetPlatform {
