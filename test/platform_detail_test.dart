@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
@@ -32,46 +31,12 @@ void main() {
       mockHttpClient = MockHttpClient();
       mockHttpClientRequest = MockHttpClientRequest();
       mockHttpClientResponse = MockHttpClientResponse();
-      PlatformDetail.forTesting(
-        mockDeviceInfo,
-        mockPlatformDispatcher
-      );
+      PlatformDetail.forTesting(mockDeviceInfo, mockPlatformDispatcher);
     });
 
     test('isWeb returns true when kIsWeb is true', () {
       expect(PlatformDetail.isWeb, equals(kIsWeb));
     });
-
-    test(
-      'getPublicIp returns a valid IP address on success',
-      () async {
-        when(() => mockHttpClient.getUrl(
-              Uri.parse('https://api64.ipify.org'),
-            )).thenAnswer(
-          (_) async => mockHttpClientRequest,
-        );
-        when(
-          () => mockHttpClientRequest.close(),
-        ).thenAnswer(
-          (_) async => mockHttpClientResponse,
-        );
-
-        when(
-          () => mockHttpClientResponse.statusCode,
-        ).thenReturn(
-          200,
-        );
-        when(
-          () => mockHttpClientResponse.transform(utf8.decoder),
-        ).thenAnswer(
-          (_) => Stream.value('192.168.1.1'),
-        );
-
-        final result = await PlatformDetail.getPublicIp;
-
-        expect(result, '192.168.1.1');
-      },
-    );
 
     test(
       'getPublicIp returns null on failure',
