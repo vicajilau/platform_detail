@@ -5,8 +5,12 @@ import 'package:platform_detail/src/network/dio_http_client.dart';
 
 /// A Network util to get IP addresses.
 class NetworkUtils {
+  final DioClient _dioClient;
+
+  NetworkUtils({DioClient? dioClient}) : _dioClient = dioClient ?? DioClient();
+
   /// Returns a list of private IP addresses for the selected version (default: IPv4)
-  static Future<List<String>> getPrivateIps({
+  Future<List<String>> getPrivateIps({
     InternetAddressType version = InternetAddressType.IPv4,
   }) async {
     if (PlatformDetail.isWeb) {
@@ -31,10 +35,9 @@ class NetworkUtils {
   }
 
   /// Returns the current public IP of the device (v4 or v6).
-  static Future<String?> getPublicIp() async {
+  Future<String?> getPublicIp() async {
     try {
-      final response =
-          await DioClient().getDio().get('https://api64.ipify.org');
+      final response = await _dioClient.getDio().get('https://api64.ipify.org');
 
       if (response.statusCode == 200) {
         return response.data.toString();

@@ -31,7 +31,9 @@ void main() {
       mockHttpClient = MockHttpClient();
       mockHttpClientRequest = MockHttpClientRequest();
       mockHttpClientResponse = MockHttpClientResponse();
-      PlatformDetail.forTesting(mockDeviceInfo, mockPlatformDispatcher);
+      PlatformDetail.forTesting(
+          mockDeviceInfo: mockDeviceInfo,
+          mockPlatformDispatcher: mockPlatformDispatcher);
     });
 
     test('isWeb returns true when kIsWeb is true', () {

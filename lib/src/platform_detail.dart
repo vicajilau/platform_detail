@@ -25,14 +25,18 @@ class PlatformDetail {
   static PlatformDispatcher _platformDispatcher =
       SchedulerBinding.instance.platformDispatcher;
 
+  static NetworkUtils _networkUtils = NetworkUtils();
+
   /// Testing purposes!!!
-  /// Allows injecting a mocked `DeviceInfoPlugin` and `PlatformDispatcher`.
-  static void forTesting(
-    DeviceInfoPlugin mockDeviceInfo,
-    PlatformDispatcher mockPlatformDispatcher,
-  ) {
-    _deviceInfo = mockDeviceInfo;
-    _platformDispatcher = mockPlatformDispatcher;
+  /// Allows injecting a mocked `DeviceInfoPlugin`, `PlatformDispatcher`, and `NetworkUtils`.
+  static void forTesting({
+    DeviceInfoPlugin? mockDeviceInfo,
+    PlatformDispatcher? mockPlatformDispatcher,
+    NetworkUtils? mockNetworkUtils,
+  }) {
+    _deviceInfo = mockDeviceInfo ?? _deviceInfo;
+    _platformDispatcher = mockPlatformDispatcher ?? _platformDispatcher;
+    _networkUtils = mockNetworkUtils ?? _networkUtils;
   }
 
   /// Returns an enum with the group of platform related.
@@ -202,8 +206,8 @@ class PlatformDetail {
       isLightMode ? DeviceTheme.light : DeviceTheme.dark;
 
   /// Returns the current public IP of the device (v4 or v6).
-  static Future<String?> get getPublicIp => NetworkUtils.getPublicIp();
+  static Future<String?> get getPublicIp => _networkUtils.getPublicIp();
 
   /// Returns the current private IP List (without loopback) of the device.
-  static Future<List<String>> get getPrivateIp => NetworkUtils.getPrivateIps();
+  static Future<List<String>> get getPrivateIp => _networkUtils.getPrivateIps();
 }
