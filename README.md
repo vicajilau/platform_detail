@@ -189,7 +189,6 @@ void main() async {
 <key>com.apple.security.network.client</key>
 <true/>
 ```
-
 ---
 
 ### Get a device description
@@ -212,6 +211,7 @@ This will return something like this:
 - Linux: Fedora 17 (Beefy Miracle)
 - Windows: Windows 10 Home (1903)
 - MacOS: macOS 13.5, MacBook Pro
+---
 
 ### Light/Dark Mode
 You can detect too if the device is configured in light or dark mode:
@@ -241,6 +241,7 @@ void main() {
   }
 }
 ```
+---
 
 [PlatformDetail]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart
 [PlatformGroup]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_group.dart
