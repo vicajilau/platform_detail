@@ -23,7 +23,7 @@
 ## About
 
 **Platform Detail** is a lightweight and developer-friendly Flutter package that makes platform detection easier, more complete, and cross-platform.  
-It provides a unified and consistent API for checking the platform your app is running on — **including web**, something that native Flutter classes like [`TargetPlatform`](https://api.flutter.dev/flutter/foundation/TargetPlatform-class.html) and `Platform` from `dart:io` don't currently support.
+It provides a unified and consistent API for checking the platform your app is running on — **including web**, something that native Flutter classes like [`TargetPlatform`](https://api.flutter.dev/flutter/foundation/TargetPlatform.html) and `Platform` from `dart:io` don't currently support.
 
 > ⚠️ Flutter’s native `Platform` and `TargetPlatform` do **not** provide support for detecting web, which can be a limitation in universal apps.  
 > ✅ `platform_detail` addresses this limitation by introducing a simple and intuitive API that includes web detection out of the box.
