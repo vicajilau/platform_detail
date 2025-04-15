@@ -241,7 +241,6 @@ void main() {
   }
 }
 ```
----
 
 [PlatformDetail]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart
 [PlatformGroup]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_group.dart
