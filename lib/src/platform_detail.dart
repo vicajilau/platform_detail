@@ -20,6 +20,7 @@ class PlatformDetail {
       SchedulerBinding.instance.platformDispatcher;
 
   static NetworkUtils _networkUtils = NetworkUtils();
+  static bool _mockedWeb = false;
 
   /// Testing purposes!!!
   /// Allows injecting a mocked `DeviceInfoPlugin`, `PlatformDispatcher`, and `NetworkUtils`.
@@ -27,10 +28,12 @@ class PlatformDetail {
     DeviceInfoPlugin? mockDeviceInfo,
     PlatformDispatcher? mockPlatformDispatcher,
     NetworkUtils? mockNetworkUtils,
+    mockedWeb = false,
   }) {
     _deviceInfo = mockDeviceInfo ?? _deviceInfo;
     _platformDispatcher = mockPlatformDispatcher ?? _platformDispatcher;
     _networkUtils = mockNetworkUtils ?? _networkUtils;
+    _mockedWeb = mockedWeb;
   }
 
   /// Returns an enum with the group of platform related.
@@ -81,7 +84,7 @@ class PlatformDetail {
   }
 
   /// Checks if the current platform is Web.
-  static bool get isWeb => kIsWeb;
+  static bool get isWeb => _mockedWeb || kIsWeb;
 
   /// This parameter calls the isDesktop and isMobile methods to detect if the current platform is desktop or web.
   static bool get isDesktopOrWeb => isWeb || isDesktop;

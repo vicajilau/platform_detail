@@ -107,4 +107,10 @@ void main() {
 
     expect(result, ['192.168.1.2']);
   });
+
+  test('getPrivateIp returns empty on web', () async {
+    PlatformDetail.forTesting(mockedWeb: true);
+    final ip = await PlatformDetail.getPrivateIp;
+    expect(ip, []);
+  });
 }
