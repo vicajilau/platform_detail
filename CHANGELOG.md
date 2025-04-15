@@ -1,3 +1,8 @@
+## 5.1.0
+* Added mocked capabilities with `PlatformDetail.forTesting()`.
+* Hidden internal classes.
+* Increased coverage on tests with mocked capabilities.
+
 ## 5.0.0
 * **BREAKING CHANGE**: `currentPlatform` no longer returns a `TargetPlatform`. It now returns a new custom enum: `PlatformType`, which includes `web` support.
 
