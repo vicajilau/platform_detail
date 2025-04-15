@@ -55,19 +55,23 @@ void main() {
 If you only rely on `TargetPlatform`, you’ll miss web support.
 
 ```dart
-// Native TargetPlatform doesn't detect web:
-if (defaultTargetPlatform == TargetPlatform.android) {
-  // OK for Android
-} else if (kIsWeb) {
-  // Web has to be checked manually
+void main() {
+  // Native TargetPlatform doesn't detect web:
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    // OK for Android
+  } else if (kIsWeb) {
+    // Web has to be checked manually
+  }
 }
 ```
 
 With `PlatformDetail`, the check is unified:
 
 ```dart
-if (PlatformDetail.isWeb) {
-  print('Web detected ✔️');
+void main() {
+  if (PlatformDetail.isWeb) {
+    print('Web detected ✔️');
+  }
 }
 ```
 
@@ -78,28 +82,36 @@ if (PlatformDetail.isWeb) {
 Check whether the current platform belongs to a broader category:
 
 ```dart
-if (PlatformDetail.isMobile) {
-  print('Mobile platform');
-}
+void main() {
+  if (PlatformDetail.isMobile) {
+    print('Mobile platform');
+  }
 
-if (PlatformDetail.isDesktopOrWeb) {
-  print('Desktop or Web platform');
+  if (PlatformDetail.isDesktop) {
+    print('Desktop platform');
+  }
+
+  if (PlatformDetail.isDesktopOrWeb) {
+    print('Desktop or Web platform');
+  }
 }
 ```
 
 Or use the `PlatformGroup` enum directly:
 
 ```dart
-switch (PlatformDetail.currentGroupPlatform) {
-  case PlatformGroup.mobile:
-    print('Mobile');
-    break;
-  case PlatformGroup.web:
-    print('Web');
-    break;
-  case PlatformGroup.desktop:
-    print('Desktop');
-    break;
+void main() {
+  switch (PlatformDetail.currentGroupPlatform) {
+    case PlatformGroup.mobile:
+      print('Mobile');
+      break;
+    case PlatformGroup.web:
+      print('Web');
+      break;
+    case PlatformGroup.desktop:
+      print('Desktop');
+      break;
+  }
 }
 ```
 
