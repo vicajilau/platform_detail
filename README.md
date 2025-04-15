@@ -119,6 +119,28 @@ void main() {
 }
 ```
 
+Or create different cases through the enum with a switch:
+
+```dart
+void main() {
+  switch (PlatformDetail.currentPlatform) {
+    case PlatformType.android:
+      print('Android');
+    case PlatformType.iOS:
+      print('iOS');
+    case PlatformType.isFuchsia:
+      print('Fuchsia');
+    case PlatformType.Windows:
+      print('Windows');
+    case PlatformType.Linux:
+      print('Linux');
+    case PlatformType.macOS:
+      print('macOS');
+    case PlatformType.Web:
+      print('Web');
+  }
+}
+```
 ---
 
 ## ✅ Why Use This Package?
