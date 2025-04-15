@@ -135,6 +135,9 @@ class PlatformDetail {
         final androidInfo = await _deviceInfo.androidInfo;
         return 'Android ${androidInfo.version.release} (SDK ${androidInfo.version.sdkInt}), '
             '${androidInfo.manufacturer} ${androidInfo.model}, (simulator: ${!androidInfo.isPhysicalDevice})';
+      case PlatformType.fuchsia:
+        final genericDeviceInfo = await _deviceInfo.deviceInfo;
+        return 'Fuchsia $genericDeviceInfo';
       case PlatformType.iOS:
         final iosInfo = await _deviceInfo.iosInfo;
         return '${iosInfo.systemName} ${iosInfo.systemVersion}, ${iosInfo.name} ${iosInfo.model}, (simulator: ${!iosInfo.isPhysicalDevice})';
@@ -150,8 +153,6 @@ class PlatformDetail {
       case PlatformType.web:
         final info = await _deviceInfo.webBrowserInfo;
         return '${info.browserName.name} (${info.appVersion})';
-      default:
-        throw Exception('Platform ($currentPlatform) not recognized.');
     }
   }
 
@@ -165,6 +166,7 @@ class PlatformDetail {
   /// - [LinuxDeviceInfo] for Linux systems.
   /// - [MacOsDeviceInfo] for macOS systems.
   /// - [WindowsDeviceInfo] for Windows systems.
+  /// - [BaseDeviceInfo] for Fuchsia systems.
   ///
   /// Throws:
   /// - An [Exception] if the platform is not recognized or unsupported.
@@ -185,8 +187,8 @@ class PlatformDetail {
         return await _deviceInfo.windowsInfo;
       case PlatformType.web:
         return await _deviceInfo.webBrowserInfo;
-      default:
-        throw Exception('Platform ($currentPlatform) not recognized.');
+      case PlatformType.fuchsia:
+        return await _deviceInfo.deviceInfo;
     }
   }
 

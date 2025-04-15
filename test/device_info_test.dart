@@ -225,7 +225,29 @@ void main() {
       PlatformDetail.forTesting(mockDeviceInfo: mockDeviceInfo);
       final infoDetailString = await PlatformDetail.deviceInfoDetails();
       final infoDetail = await PlatformDetail.deviceInfo();
-      expect(infoDetailString, 'iOS 17.4.1, Flutter’s iPhone iPhone, (simulator: false)');
+      expect(infoDetailString,
+          'iOS 17.4.1, Flutter’s iPhone iPhone, (simulator: false)');
+      expect(infoDetail, info);
+    });
+
+    test('deviceInfo returns expected format for Fuchsia', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+      final mockMap = {
+        'name': 'Fuchsia Emulator',
+        'systemName': 'Fuchsia',
+        'systemVersion': '1.0.0',
+        'model': 'Fuchsia Dev Board',
+        'isPhysicalDevice': false,
+      };
+      final info = BaseDeviceInfo(mockMap);
+
+      when(() => mockDeviceInfo.deviceInfo).thenAnswer((_) async => info);
+
+      PlatformDetail.forTesting(mockDeviceInfo: mockDeviceInfo);
+      final infoDetailString = await PlatformDetail.deviceInfoDetails();
+      final infoDetail = await PlatformDetail.deviceInfo();
+      expect(infoDetailString,
+          'Fuchsia BaseDeviceInfo{data: {name: Fuchsia Emulator, systemName: Fuchsia, systemVersion: 1.0.0, model: Fuchsia Dev Board, isPhysicalDevice: false}}');
       expect(infoDetail, info);
     });
   });
