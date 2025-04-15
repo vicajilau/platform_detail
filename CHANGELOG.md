@@ -1,6 +1,7 @@
 ## 5.1.0
 * Added mocked capabilities with `PlatformDetail.forTesting()`.
-* Hidden internal classes.
+* Added `getPublicIp` and `getPrivateIp` methods.
+* Reorganized files hiding internal classes.
 * Increased coverage on tests with mocked capabilities.
 
 ## 5.0.0
