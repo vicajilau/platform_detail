@@ -246,5 +246,39 @@ void main() {
         }
       }
     });
+
+    test('isFuchsia returns true only when platform is Fuchsia', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+      expect(PlatformDetail.isFuchsia, isTrue);
+
+      for (var platform in TargetPlatform.values) {
+        if (platform != TargetPlatform.fuchsia) {
+          debugDefaultTargetPlatformOverride = platform;
+          expect(PlatformDetail.isFuchsia, isFalse);
+        }
+      }
+    });
+
+    test('isDesktopOrWeb returns true when platform is desktop or web', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      expect(PlatformDetail.isDesktopOrWeb, isTrue);
+      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+      expect(PlatformDetail.isDesktopOrWeb, isTrue);
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      expect(PlatformDetail.isDesktopOrWeb, isTrue);
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      expect(PlatformDetail.isDesktopOrWeb, isFalse);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      expect(PlatformDetail.isDesktopOrWeb, isFalse);
+    });
+
+    test('type returns correct PlatformGroup', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      expect(PlatformDetail.type, PlatformGroup.desktop);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      expect(PlatformDetail.type, PlatformGroup.mobile);
+      PlatformDetail.forTesting(mockedWeb: true);
+      expect(PlatformDetail.type, PlatformGroup.web);
+    });
   });
 }
