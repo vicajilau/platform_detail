@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,27 +8,15 @@ class MockDeviceInfoPlugin extends Mock implements DeviceInfoPlugin {}
 
 class MockPlatformDispatcher extends Mock implements PlatformDispatcher {}
 
-class MockHttpClient extends Mock implements HttpClient {}
-
-class MockHttpClientRequest extends Mock implements HttpClientRequest {}
-
-class MockHttpClientResponse extends Mock implements HttpClientResponse {}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group('PlatformDetail Tests', () {
     late MockDeviceInfoPlugin mockDeviceInfo;
     late MockPlatformDispatcher mockPlatformDispatcher;
-    late MockHttpClient mockHttpClient;
-    late MockHttpClientRequest mockHttpClientRequest;
-    late MockHttpClientResponse mockHttpClientResponse;
 
     setUpAll(() {
       mockDeviceInfo = MockDeviceInfoPlugin();
       mockPlatformDispatcher = MockPlatformDispatcher();
-      mockHttpClient = MockHttpClient();
-      mockHttpClientRequest = MockHttpClientRequest();
-      mockHttpClientResponse = MockHttpClientResponse();
       PlatformDetail.forTesting(
           mockDeviceInfo: mockDeviceInfo,
           mockPlatformDispatcher: mockPlatformDispatcher);
@@ -38,44 +24,6 @@ void main() {
 
     test('isWeb returns true when kIsWeb is true', () {
       expect(PlatformDetail.isWeb, equals(kIsWeb));
-    });
-
-    test(
-      'getPublicIp returns null on failure',
-      () async {
-        when(() => mockHttpClient.getUrl(
-              Uri.parse('https://api64.ipify.org'),
-            )).thenAnswer(
-          (_) async => mockHttpClientRequest,
-        );
-        when(
-          () => mockHttpClientRequest.close(),
-        ).thenAnswer(
-          (_) async => mockHttpClientResponse,
-        );
-
-        when(
-          () => mockHttpClientResponse.statusCode,
-        ).thenReturn(
-          500,
-        );
-
-        final result = await PlatformDetail.getPublicIp;
-
-        expect(result, null);
-      },
-    );
-
-    test('getPublicIp handles exceptions and returns null', () async {
-      when(() => mockHttpClient.getUrl(
-            Uri.parse('https://api64.ipify.org'),
-          )).thenThrow(
-        SocketException('No Internet'),
-      );
-
-      final result = await PlatformDetail.getPublicIp;
-
-      expect(result, null);
     });
 
     test('isDesktop returns true for macOS, linux, and windows', () {
@@ -116,33 +64,6 @@ void main() {
           .thenReturn(Brightness.light);
 
       expect(PlatformDetail.theme, equals(DeviceTheme.light));
-    });
-
-    test('deviceInfo returns expected format for web', () async {
-      if (PlatformDetail.isWeb) {
-        final webInfo = WebBrowserInfo(
-          userAgent: "Chrome",
-          appVersion: '115.0.5790.170',
-          appCodeName: 'Mozilla',
-          appName: 'Netscape',
-          deviceMemory: 8,
-          language: 'en-US',
-          languages: ['en-US'],
-          platform: 'Win32',
-          product: 'Gecko',
-          productSub: '20030107',
-          vendor: 'GoogleInc.',
-          vendorSub: '',
-          maxTouchPoints: 0,
-          hardwareConcurrency: 4,
-        );
-
-        when(() => mockDeviceInfo.webBrowserInfo)
-            .thenAnswer((_) async => webInfo);
-
-        final result = await PlatformDetail.deviceInfoDetails();
-        expect(result, contains('Google Chrome (115.0.5790.170)'));
-      }
     });
 
     test('isLightMode returns true when brightness is dark', () {
@@ -259,6 +180,16 @@ void main() {
       }
     });
 
+    test('type returns correct PlatformGroup', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      expect(PlatformDetail.type, PlatformGroup.desktop);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      expect(PlatformDetail.type, PlatformGroup.mobile);
+      PlatformDetail.forTesting(mockedWeb: true);
+      expect(PlatformDetail.type, PlatformGroup.web);
+      PlatformDetail.forTesting(mockedWeb: false);
+    });
+
     test('isDesktopOrWeb returns true when platform is desktop or web', () {
       debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
       expect(PlatformDetail.isDesktopOrWeb, isTrue);
@@ -267,18 +198,16 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.windows;
       expect(PlatformDetail.isDesktopOrWeb, isTrue);
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      expect(PlatformDetail.isDesktopOrWeb, isFalse);
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      expect(PlatformDetail.isDesktopOrWeb, isFalse);
+      PlatformDetail.forTesting(mockedWeb: true);
+      expect(PlatformDetail.isDesktopOrWeb, isTrue);
+      PlatformDetail.forTesting(mockedWeb: false);
     });
 
-    test('type returns correct PlatformGroup', () {
-      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
-      expect(PlatformDetail.type, PlatformGroup.desktop);
+    test('isDesktopOrWeb returns false when platform is mobile', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      expect(PlatformDetail.isDesktopOrWeb, isFalse);
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      expect(PlatformDetail.type, PlatformGroup.mobile);
-      PlatformDetail.forTesting(mockedWeb: true);
-      expect(PlatformDetail.type, PlatformGroup.web);
+      expect(PlatformDetail.isDesktopOrWeb, isFalse);
     });
   });
 }

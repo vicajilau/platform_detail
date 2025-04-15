@@ -50,7 +50,7 @@ class PlatformDetail {
 
   /// Returns the current platform type, including support for web.
   static PlatformType get currentPlatform {
-    if (kIsWeb) return PlatformType.web;
+    if (_mockedWeb || kIsWeb) return PlatformType.web;
     return defaultTargetPlatform.toPlatformType();
   }
 

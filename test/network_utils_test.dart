@@ -15,33 +15,84 @@ class MockDio extends Mock implements Dio {}
 
 class MockWrapper extends Mock implements NetworkInterfaceWrapper {}
 
+class MockHttpClient extends Mock implements HttpClient {}
+
+class MockHttpClientRequest extends Mock implements HttpClientRequest {}
+
+class MockHttpClientResponse extends Mock implements HttpClientResponse {}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('DefaultNetworkInterfaceWrapper', () {
-
     late MockDio mockDio;
     late DioClient dioClient;
     late NetworkInterfaceWrapper wrapper;
+    late MockHttpClient mockHttpClient;
+    late MockHttpClientRequest mockHttpClientRequest;
+    late MockHttpClientResponse mockHttpClientResponse;
 
     setUpAll(() {
       mockDio = MockDio();
       dioClient = DioClient(dio: mockDio);
       wrapper = DefaultNetworkInterfaceWrapper();
+      mockHttpClient = MockHttpClient();
+      mockHttpClientRequest = MockHttpClientRequest();
+      mockHttpClientResponse = MockHttpClientResponse();
 
       PlatformDetail.forTesting(
         mockNetworkUtils: NetworkUtils(dioClient: dioClient),
       );
     });
 
-    test('returns a non-empty list of network interfaces (may vary by system)', () async {
+    test(
+      'getPublicIp returns null on failure',
+      () async {
+        when(() => mockHttpClient.getUrl(
+              Uri.parse('https://api64.ipify.org'),
+            )).thenAnswer(
+          (_) async => mockHttpClientRequest,
+        );
+        when(
+          () => mockHttpClientRequest.close(),
+        ).thenAnswer(
+          (_) async => mockHttpClientResponse,
+        );
+
+        when(
+          () => mockHttpClientResponse.statusCode,
+        ).thenReturn(
+          500,
+        );
+
+        final result = await PlatformDetail.getPublicIp;
+
+        expect(result, null);
+      },
+    );
+
+    test('getPublicIp handles exceptions and returns null', () async {
+      when(() => mockHttpClient.getUrl(
+            Uri.parse('https://api64.ipify.org'),
+          )).thenThrow(
+        SocketException('No Internet'),
+      );
+
+      final result = await PlatformDetail.getPublicIp;
+
+      expect(result, null);
+    });
+
+    test('returns a non-empty list of network interfaces (may vary by system)',
+        () async {
       final interfaces = await wrapper.list();
 
       // This test assumes the system has at least one non-loopback network interface.
       expect(interfaces, isA<List<CustomNetworkInterface>>());
 
       // Optionally assert there's at least one interface with at least one address.
-      final hasAtLeastOneIp = interfaces.any((iface) => iface.addresses.isNotEmpty);
+      final hasAtLeastOneIp =
+          interfaces.any((iface) => iface.addresses.isNotEmpty);
       expect(hasAtLeastOneIp, isTrue);
     });
 
@@ -50,7 +101,8 @@ void main() {
 
       for (final iface in interfaces) {
         for (final addr in iface.addresses) {
-          expect(InternetAddress.tryParse(addr.address)?.type, equals(InternetAddressType.IPv4));
+          expect(InternetAddress.tryParse(addr.address)?.type,
+              equals(InternetAddressType.IPv4));
         }
       }
     });
@@ -59,7 +111,7 @@ void main() {
       final interfaces = await wrapper.list(includeLoopback: true);
 
       final hasLoopback = interfaces.any(
-            (iface) => iface.addresses.any((addr) => addr.isLoopback),
+        (iface) => iface.addresses.any((addr) => addr.isLoopback),
       );
 
       expect(hasLoopback, isTrue);
