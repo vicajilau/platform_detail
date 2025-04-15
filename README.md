@@ -39,7 +39,7 @@ It provides a unified and consistent API for checking the platform your app is r
 
 ## Getting Started
 
-The recommended way to use the library is to call the static members of the [`PlatformDetail`] class.  
+The recommended way to use the library is to call the static members of the [PlatformDetail] class.  
 Thanks to a factory constructor, multiple instances are not created — a singleton is used internally.
 
 ---
