@@ -80,6 +80,15 @@ void main() {
     });
   });
 
+  test('getPrivateIp returns a list of IP addresses as strings', () async {
+    final result = await PlatformDetail.getPrivateIp;
+
+    expect(result, isA<List<String>>());
+    for (final ip in result) {
+      expect(ip, isA<String>());
+    }
+  });
+
   test('Return private IP addresses (no loopback)', () async {
     final mockWrapper = MockWrapper();
     final utils = NetworkUtils(interfaceWrapper: mockWrapper);
