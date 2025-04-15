@@ -121,5 +121,112 @@ void main() {
       expect(infoDetailString, 'Windows 11 Pro(2009)');
       expect(infoDetail, info);
     });
+
+    test('deviceInfo returns expected format for linux', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+      final info = LinuxDeviceInfo(
+        name: 'Ubuntu',
+        version: '22.04.1 LTS (Jammy Jellyfish)',
+        id: 'ubuntu',
+        idLike: ['debian'],
+        versionCodename: 'jammy',
+        versionId: '22.04',
+        prettyName: 'Ubuntu 22.04.1 LTS',
+        buildId: '2023.04.26',
+        variant: 'Ubuntu Desktop',
+        variantId: 'ubuntu-desktop',
+        machineId: 'abc123-def456-ghi789',
+      );
+
+      when(() => mockDeviceInfo.linuxInfo).thenAnswer((_) async => info);
+
+      PlatformDetail.forTesting(mockDeviceInfo: mockDeviceInfo);
+      final infoDetailString = await PlatformDetail.deviceInfoDetails();
+      final infoDetail = await PlatformDetail.deviceInfo();
+      expect(infoDetailString, 'Ubuntu 22.04.1 LTS');
+      expect(infoDetail, info);
+    });
+
+    test('deviceInfo returns expected format for android', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final mockMap = {
+        'version': {
+          'sdkInt': 33,
+          'release': '13',
+          'previewSdkInt': 0,
+          'incremental': 'abcd1234',
+          'codename': 'REL',
+          'baseOS': 'android',
+          'securityPatch': '2024-04-01',
+        },
+        'board': 'goldfish_x86_64',
+        'bootloader': 'unknown',
+        'brand': 'google',
+        'device': 'generic_x86_64',
+        'display': 'sdk_gphone_x86_64-userdebug 13',
+        'fingerprint': 'google/sdk_gphone_x86_64',
+        'hardware': 'ranchu',
+        'host': 'abfarm999',
+        'id': 'TQ3A.230805.001.A1',
+        'manufacturer': 'Google',
+        'model': 'Pixel 6 Pro',
+        'product': 'sdk_gphone_x86_64',
+        'name': 'generic_x86_64',
+        'supported32BitAbis': ['x86'],
+        'supported64BitAbis': ['x86_64'],
+        'supportedAbis': ['x86_64', 'x86'],
+        'tags': 'test-keys',
+        'type': 'userdebug',
+        'isPhysicalDevice': false,
+        'systemFeatures': [
+          'android.hardware.camera',
+          'android.hardware.sensor.accelerometer'
+        ],
+        'serialNumber': 'unknown',
+        'isLowRamDevice': false,
+      };
+
+      final info = AndroidDeviceInfo.fromMap(mockMap);
+
+      when(() => mockDeviceInfo.androidInfo).thenAnswer((_) async => info);
+
+      PlatformDetail.forTesting(mockDeviceInfo: mockDeviceInfo);
+      final infoDetailString = await PlatformDetail.deviceInfoDetails();
+      final infoDetail = await PlatformDetail.deviceInfo();
+      expect(infoDetailString,
+          'Android 13 (SDK 33), Google Pixel 6 Pro, (simulator: true)');
+      expect(infoDetail, info);
+    });
+
+    test('deviceInfo returns expected format for ios', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final mockMap = {
+        'name': 'Flutter’s iPhone',
+        'systemName': 'iOS',
+        'systemVersion': '17.4.1',
+        'model': 'iPhone',
+        'modelName': 'iPhone 14 Pro',
+        'localizedModel': 'iPhone',
+        'identifierForVendor': '12345678-1234-1234-1234-1234567890ab',
+        'isPhysicalDevice': true,
+        'isiOSAppOnMac': false,
+        'utsname': {
+          'sysname': 'Darwin',
+          'nodename': 'iPhone',
+          'release': '23.4.0',
+          'version': 'Darwin Kernel Version 23.4.0',
+          'machine': 'iPhone15,2',
+        },
+      };
+      final info = IosDeviceInfo.fromMap(mockMap);
+
+      when(() => mockDeviceInfo.iosInfo).thenAnswer((_) async => info);
+
+      PlatformDetail.forTesting(mockDeviceInfo: mockDeviceInfo);
+      final infoDetailString = await PlatformDetail.deviceInfoDetails();
+      final infoDetail = await PlatformDetail.deviceInfo();
+      expect(infoDetailString, 'iOS 17.4.1, Flutter’s iPhone iPhone, (simulator: false)');
+      expect(infoDetail, info);
+    });
   });
 }

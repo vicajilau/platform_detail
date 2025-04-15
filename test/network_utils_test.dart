@@ -130,39 +130,39 @@ void main() {
 
       expect(result, '123.456.789');
     });
-  });
 
-  test('getPrivateIp returns a list of IP addresses as strings', () async {
-    final result = await PlatformDetail.getPrivateIp;
+    test('getPrivateIp returns a list of IP addresses as strings', () async {
+      final result = await PlatformDetail.getPrivateIp;
 
-    expect(result, isA<List<String>>());
-    for (final ip in result) {
-      expect(ip, isA<String>());
-    }
-  });
+      expect(result, isA<List<String>>());
+      for (final ip in result) {
+        expect(ip, isA<String>());
+      }
+    });
 
-  test('Return private IP addresses (no loopback)', () async {
-    final mockWrapper = MockWrapper();
-    final utils = NetworkUtils(interfaceWrapper: mockWrapper);
+    test('Return private IP addresses (no loopback)', () async {
+      final mockWrapper = MockWrapper();
+      final utils = NetworkUtils(interfaceWrapper: mockWrapper);
 
-    when(() => mockWrapper.list(
-          includeLoopback: false,
-          type: InternetAddressType.IPv4,
-        )).thenAnswer((_) async => [
-          CustomNetworkInterface([
-            CustomInternetAddress('192.168.1.2', false),
-            CustomInternetAddress('127.0.0.1', true),
-          ])
-        ]);
+      when(() => mockWrapper.list(
+            includeLoopback: false,
+            type: InternetAddressType.IPv4,
+          )).thenAnswer((_) async => [
+            CustomNetworkInterface([
+              CustomInternetAddress('192.168.1.2', false),
+              CustomInternetAddress('127.0.0.1', true),
+            ])
+          ]);
 
-    final result = await utils.getPrivateIps();
+      final result = await utils.getPrivateIps();
 
-    expect(result, ['192.168.1.2']);
-  });
+      expect(result, ['192.168.1.2']);
+    });
 
-  test('getPrivateIp returns empty on web', () async {
-    PlatformDetail.forTesting(mockedWeb: true);
-    final ip = await PlatformDetail.getPrivateIp;
-    expect(ip, []);
+    test('getPrivateIp returns empty on web', () async {
+      PlatformDetail.forTesting(mockedWeb: true);
+      final ip = await PlatformDetail.getPrivateIp;
+      expect(ip, []);
+    });
   });
 }
