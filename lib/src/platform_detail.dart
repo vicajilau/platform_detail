@@ -1,16 +1,10 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:platform_detail/src/platform_type.dart';
 import 'package:platform_detail/src/target_platform_extension.dart';
 
+import '../platform_detail.dart';
 import 'network/network_utils.dart';
-
-/// It groups in an enumerated list the type of platform on which a Flutter application can be run.
-enum PlatformGroup { mobile, desktop, web }
-
-/// Groups in an enumerated list the type of theme the device is configured with.
-enum DeviceTheme { light, dark }
 
 /// Allows you to determine platform details such as operating system or environment.
 class PlatformDetail {

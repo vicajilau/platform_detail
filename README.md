@@ -20,104 +20,149 @@
   </a>
 </p>
 
-A lightweight Flutter package that provides an easy and optimized way to retrieve details about the platform it’s running on. 
-It supports multiple platforms, including mobile, desktop, and web.
+## About
 
-## Using
+**Platform Detail** is a lightweight and developer-friendly Flutter package that makes platform detection easier, more complete, and cross-platform.  
+It provides a unified and consistent API for checking the platform your app is running on — **including web**, something that native Flutter classes like [`TargetPlatform`](https://api.flutter.dev/flutter/foundation/TargetPlatform.html) and `Platform` from `dart:io` don't currently support.
 
-The easiest way to use this library is to call the [PlatformDetail] class as follows. 
-Multiple instances are not being created since thanks to a factory constructor it always 
-returns an internal singleton.
+> ⚠️ Flutter’s native `Platform` and `TargetPlatform` do **not** provide support for detecting web, which can be a limitation in universal apps.  
+> ✅ `platform_detail` addresses this limitation by introducing a simple and intuitive API that includes web detection out of the box.
 
-### Detecting by type of platform
-If you just need to know if the current platform where Flutter is running.
+## Getting Started
 
-> **Note**: [`TargetPlatform`](https://api.flutter.dev/flutter/foundation/TargetPlatform-class.html) does not currently support the web, and in universal apps, this can be a limitation.  
-That’s why `PlatformType` is introduced as a wrapper to include **web** support seamlessly.
+The recommended way to use the library is to call the static members of the [`PlatformDetail`] class.  
+Thanks to a factory constructor, multiple instances are not created — a singleton is used internally.
+
+---
+
+## 🔍 Basic Usage
+
+### ✔️ Detecting Platform Type
 
 ```dart
 import 'package:platform_detail/platform_detail.dart';
 
 void main() {
   PlatformType platform = PlatformDetail.currentPlatform;
-  print('This platform is: $platform'); // This platform is: PlatformType.android
+  print('This platform is: $platform'); // e.g., PlatformType.android
 }
 ```
 
-### Detecting each platform specifically
-If you just need to know if it's mobile, desktop, web, or even desktop/web. You will love:
+---
+
+### 🌐 Why use `PlatformType`?
+
+If you only rely on `TargetPlatform`, you’ll miss web support.
 
 ```dart
-import 'package:platform_detail/platform_detail.dart';
+void main() {
+  // Native TargetPlatform doesn't detect web:
+  if (defaultTargetPlatform == TargetPlatform.android) {
+    // OK for Android
+  } else if (kIsWeb) {
+    // Web has to be checked manually
+  }
+}
+```
 
+With `PlatformDetail`, the check is unified:
+
+```dart
+void main() {
+  if (PlatformDetail.isWeb) {
+    print('Web detected ✔️');
+  }
+}
+```
+
+---
+
+### 🔎 Group-based Detection
+
+Check whether the current platform belongs to a broader category:
+
+```dart
 void main() {
   if (PlatformDetail.isMobile) {
-    print('The current platform is Mobile');
-  }
-
-  if (PlatformDetail.isDesktopOrWeb) {
-    print('The current platform is Desktop or Web');
+    print('Mobile platform');
   }
 
   if (PlatformDetail.isDesktop) {
-    print('The current platform is Desktop');
+    print('Desktop platform');
   }
 
-  if (PlatformDetail.isWeb) {
-    print('The current platform is web');
+  if (PlatformDetail.isDesktopOrWeb) {
+    print('Desktop or Web platform');
   }
 }
 ```
 
-In addition, you can also use the enum in the [PlatformGroup][] to which it belongs. That is, if it is web, mobile or desktop:
+Or use the `PlatformGroup` enum directly:
 
 ```dart
 void main() {
-  switch (PlatformDetails.currentGroupPlatform) {
+  switch (PlatformDetail.currentGroupPlatform) {
     case PlatformGroup.mobile:
-      print('The current group platform is mobile');
+      print('Mobile');
       break;
     case PlatformGroup.web:
-      print('The current group platform is web');
+      print('Web');
       break;
     case PlatformGroup.desktop:
-      print('The current group platform is desktop');
+      print('Desktop');
       break;
   }
 }
 ```
 
-### Detecting by single platform
-If instead you want to ask individually for each platform supported by Flutter:
+---
+
+### 🎯 Detecting Specific Platforms
 
 ```dart
 void main() {
-  if (PlatformDetail.isIOS) {
-    print('The current platform is iOS');
-  }
-
-  if (PlatformDetail.isAndroid) {
-    print('The current platform is Android');
-  }
-
-  if (PlatformDetail.isFuchsia) {
-    print('The current platform is Fuchsia');
-  }
-
-  if (PlatformDetail.isWindows) {
-    print('The current platform is Windows');
-  }
-
-  if (PlatformDetail.isLinux) {
-    print('The current platform is Linux');
-  }
-
-  if (PlatformDetail.isMacOS) {
-    print('The current platform is macOS');
-  }
+  if (PlatformDetail.isIOS) print('iOS');
+  if (PlatformDetail.isAndroid) print('Android');
+  if (PlatformDetail.isFuchsia) print('Fuchsia');
+  if (PlatformDetail.isWindows) print('Windows');
+  if (PlatformDetail.isLinux) print('Linux');
+  if (PlatformDetail.isMacOS) print('macOS');
+  if (PlatformDetail.isWeb) print('Web');
 }
 ```
 
+Or create different cases through the enum with a switch:
+
+```dart
+void main() {
+  switch (PlatformDetail.currentPlatform) {
+    case PlatformType.android:
+      print('Android');
+    case PlatformType.iOS:
+      print('iOS');
+    case PlatformType.isFuchsia:
+      print('Fuchsia');
+    case PlatformType.Windows:
+      print('Windows');
+    case PlatformType.Linux:
+      print('Linux');
+    case PlatformType.macOS:
+      print('macOS');
+    case PlatformType.Web:
+      print('Web');
+  }
+}
+```
+---
+
+## ✅ Why Use This Package?
+
+- ✅ Unified API across all platforms (including web).
+- ✅ Clear separation between **platform type** and **platform group**.
+- ✅ Singleton behavior via factory constructor.
+- ✅ No need to manually check `kIsWeb` or rely on partial solutions.
+
+---
 
 ### Get a device description
 If you need more detailed information about the device and operating system it is running on.
@@ -155,7 +200,7 @@ void main() {
 }
 ```
 
-Also, you can use the [DeviceTheme][] enum for this:
+Also, you can use the [DeviceTheme] enum for this:
 
 ```dart
 void main() {
@@ -170,5 +215,6 @@ void main() {
 ```
 
 [PlatformDetail]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart
-[PlatformGroup]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart
-[DeviceTheme]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_detail.dart
+[PlatformGroup]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_group.dart
+[DeviceTheme]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/device_theme.dart
+[PlatformType]: https://github.com/vicajilau/platform_detail/blob/master/lib/src/platform_type.dart
