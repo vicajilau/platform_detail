@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:platform_detail/src/network/custom_internet_address.dart';
+import 'package:platform_detail/src/network/custom_network_interface.dart';
 import 'package:platform_detail/src/network/dio_http_client.dart';
+import 'package:platform_detail/src/network/network_interface_wrapper.dart';
 import 'package:platform_detail/src/network/network_utils.dart';
 import 'package:platform_detail/src/platform_detail.dart';
 
 class MockDio extends Mock implements Dio {}
+
+class MockWrapper extends Mock implements NetworkInterfaceWrapper {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -36,5 +43,24 @@ void main() {
 
       expect(result, '123.456.789');
     });
+  });
+
+  test('Return private IP addresses (no loopback)', () async {
+    final mockWrapper = MockWrapper();
+    final utils = NetworkUtils(interfaceWrapper: mockWrapper);
+
+    when(() => mockWrapper.list(
+          includeLoopback: false,
+          type: InternetAddressType.IPv4,
+        )).thenAnswer((_) async => [
+          CustomNetworkInterface([
+            CustomInternetAddress('192.168.1.2', false),
+            CustomInternetAddress('127.0.0.1', true),
+          ])
+        ]);
+
+    final result = await utils.getPrivateIps();
+
+    expect(result, ['192.168.1.2']);
   });
 }

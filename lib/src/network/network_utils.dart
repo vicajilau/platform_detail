@@ -3,11 +3,20 @@ import 'dart:io';
 import 'package:platform_detail/platform_detail.dart';
 import 'package:platform_detail/src/network/dio_http_client.dart';
 
+import 'default_network_interface_wrapper.dart';
+import 'network_interface_wrapper.dart';
+
 /// A Network util to get IP addresses.
 class NetworkUtils {
   final DioClient _dioClient;
+  final NetworkInterfaceWrapper _interfaceWrapper;
 
-  NetworkUtils({DioClient? dioClient}) : _dioClient = dioClient ?? DioClient();
+  NetworkUtils({
+    DioClient? dioClient,
+    NetworkInterfaceWrapper? interfaceWrapper,
+  })  : _dioClient = dioClient ?? DioClient(),
+        _interfaceWrapper =
+            interfaceWrapper ?? DefaultNetworkInterfaceWrapper();
 
   /// Returns a list of private IP addresses for the selected version (default: IPv4)
   Future<List<String>> getPrivateIps({
@@ -16,7 +25,8 @@ class NetworkUtils {
     if (PlatformDetail.isWeb) {
       return [];
     }
-    final interfaces = await NetworkInterface.list(
+
+    final interfaces = await _interfaceWrapper.list(
       includeLoopback: false,
       type: version,
     );
