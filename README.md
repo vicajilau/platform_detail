@@ -28,6 +28,15 @@ It provides a unified and consistent API for checking the platform your app is r
 > ⚠️ Flutter’s native `Platform` and `TargetPlatform` do **not** provide support for detecting web, which can be a limitation in universal apps.  
 > ✅ `platform_detail` addresses this limitation by introducing a simple and intuitive API that includes web detection out of the box.
 
+## ✅ Why Use This Package?
+
+- ✅ Unified API across all platforms (including web).
+- ✅ Clear separation between **platform type** and **platform group**.
+- ✅ Singleton behavior via factory constructor.
+- ✅ No need to manually check `kIsWeb` or rely on partial solutions.
+- ✅ Detect private and public IP addresses.
+- ✅ Detect device theme (light or dark).
+
 ## Getting Started
 
 The recommended way to use the library is to call the static members of the [`PlatformDetail`] class.  
@@ -155,12 +164,31 @@ void main() {
 ```
 ---
 
-## ✅ Why Use This Package?
+### 🌐 Detecting IPs
 
-- ✅ Unified API across all platforms (including web).
-- ✅ Clear separation between **platform type** and **platform group**.
-- ✅ Singleton behavior via factory constructor.
-- ✅ No need to manually check `kIsWeb` or rely on partial solutions.
+You can detect the **private IP** of the device:
+
+```dart
+void main() async {
+  final List<String> privateIps = await PlatformDetail.getPrivateIp;
+}
+```
+
+You can also detect the **public IP** of the device:
+
+```dart
+void main() async {
+  final String publicIp = await PlatformDetail.getPublicIp;
+}
+```
+
+> ℹ️ No configuration is required for most platforms.  
+> For **macOS**, you must add the following entry to both `DebugProfile.entitlements` and `ReleaseProfile.entitlements` files:
+
+```xml
+<key>com.apple.security.network.client</key>
+<true/>
+```
 
 ---
 
