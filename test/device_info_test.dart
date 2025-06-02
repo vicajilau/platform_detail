@@ -184,6 +184,8 @@ void main() {
         ],
         'serialNumber': 'unknown',
         'isLowRamDevice': false,
+        'physicalRamSize': 16,
+        'availableRamSize': 6
       };
 
       final info = AndroidDeviceInfo.fromMap(mockMap);
@@ -217,6 +219,8 @@ void main() {
           'version': 'Darwin Kernel Version 23.4.0',
           'machine': 'iPhone15,2',
         },
+        'physicalRamSize': 16,
+        'availableRamSize': 6
       };
       final info = IosDeviceInfo.fromMap(mockMap);
 
