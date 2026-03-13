@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,6 +19,8 @@ void main() {
     setUpAll(() {
       mockDeviceInfo = MockDeviceInfoPlugin();
       mockPlatformDispatcher = MockPlatformDispatcher();
+      when(() => mockPlatformDispatcher.locale)
+          .thenReturn(const Locale('es', 'ES'));
       PlatformDetail.forTesting(
           mockDeviceInfo: mockDeviceInfo,
           mockPlatformDispatcher: mockPlatformDispatcher);
@@ -257,6 +261,238 @@ void main() {
       expect(infoDetailString,
           'Fuchsia BaseDeviceInfo{data: {name: Fuchsia Emulator, systemName: Fuchsia, systemVersion: 1.0.0, model: Fuchsia Dev Board, isPhysicalDevice: false}}');
       expect(infoDetail, info);
+    });
+
+    test('environmentDetails uses PlatformType and wrapper on android',
+        () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final mockMap = {
+        'version': {
+          'sdkInt': 33,
+          'release': '13',
+          'previewSdkInt': 0,
+          'incremental': 'abcd1234',
+          'codename': 'REL',
+          'baseOS': 'android',
+          'securityPatch': '2024-04-01',
+        },
+        'board': 'goldfish_x86_64',
+        'bootloader': 'unknown',
+        'brand': 'google',
+        'device': 'generic_x86_64',
+        'display': 'sdk_gphone_x86_64-userdebug 13',
+        'fingerprint': 'google/sdk_gphone_x86_64',
+        'hardware': 'ranchu',
+        'host': 'abfarm999',
+        'id': 'TQ3A.230805.001.A1',
+        'manufacturer': 'Google',
+        'model': 'Pixel 6 Pro',
+        'product': 'sdk_gphone_x86_64',
+        'name': 'generic_x86_64',
+        'supported32BitAbis': ['x86'],
+        'supported64BitAbis': ['x86_64'],
+        'supportedAbis': ['x86_64', 'x86'],
+        'tags': 'test-keys',
+        'type': 'userdebug',
+        'isPhysicalDevice': false,
+        'systemFeatures': [
+          'android.hardware.camera',
+          'android.hardware.sensor.accelerometer'
+        ],
+        'serialNumber': 'unknown',
+        'isLowRamDevice': false,
+        'freeDiskSize': 128000,
+        'totalDiskSize': 512000,
+        'physicalRamSize': 16,
+        'availableRamSize': 6
+      };
+      final info = AndroidDeviceInfo.fromMap(mockMap);
+
+      when(() => mockDeviceInfo.androidInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.android);
+      expect(details.platform, 'android 13');
+      expect(details.deviceModel, 'Google Pixel 6 Pro');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails falls back on plugin error', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      when(() => mockDeviceInfo.iosInfo).thenThrow(Exception('boom'));
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.iOS);
+      expect(details.platform, 'iOS');
+      expect(details.deviceModel, 'unknown');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails returns ios values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final mockMap = {
+        'name': 'Flutter iPhone',
+        'systemName': 'iOS',
+        'systemVersion': '17.4.1',
+        'model': 'iPhone',
+        'modelName': 'iPhone 14 Pro',
+        'localizedModel': 'iPhone',
+        'identifierForVendor': '12345678-1234-1234-1234-1234567890ab',
+        'isPhysicalDevice': true,
+        'isiOSAppOnMac': false,
+        'utsname': {
+          'sysname': 'Darwin',
+          'nodename': 'iPhone',
+          'release': '23.4.0',
+          'version': 'Darwin Kernel Version 23.4.0',
+          'machine': 'iPhone15,2',
+        },
+        'freeDiskSize': 128000,
+        'totalDiskSize': 512000,
+        'physicalRamSize': 16,
+        'availableRamSize': 6
+      };
+      final info = IosDeviceInfo.fromMap(mockMap);
+
+      when(() => mockDeviceInfo.iosInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.iOS);
+      expect(details.platform, 'ios 17.4.1');
+      expect(details.deviceModel, 'iPhone 14 Pro');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails returns macOS values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      final info = MacOsDeviceInfo.fromMap({
+        'computerName': 'MyMac',
+        'hostName': 'mymac.local',
+        'arch': 'x86_64',
+        'model': 'MacBookPro18,3',
+        'modelName': 'MacBook Pro',
+        'kernelVersion': 'Darwin 23.2.0',
+        'osRelease': '23.2.0',
+        'majorVersion': 14,
+        'minorVersion': 2,
+        'patchVersion': 0,
+        'activeCPUs': 8,
+        'memorySize': 17179869184,
+        'cpuFrequency': 2400000000,
+        'systemGUID': 'ABC123-XYZ789'
+      });
+
+      when(() => mockDeviceInfo.macOsInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.macOS);
+      expect(details.platform, 'macos 23.2.0');
+      expect(details.deviceModel, 'MacBook Pro');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails returns windows values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      final info = WindowsDeviceInfo(
+        computerName: 'MY-PC',
+        numberOfCores: 8,
+        systemMemoryInMegabytes: 16384,
+        userName: 'TestUser',
+        majorVersion: 10,
+        minorVersion: 0,
+        buildNumber: 22621,
+        platformId: 2,
+        csdVersion: '',
+        servicePackMajor: 0,
+        servicePackMinor: 0,
+        suitMask: 0,
+        productType: 1,
+        reserved: 0,
+        buildLab: '22621.vb_release.191206-1406',
+        buildLabEx: '22621.1.amd64fre.ni_release.210506-1631',
+        digitalProductId: Uint8List.fromList([1, 2, 3, 4]),
+        displayVersion: '22H2',
+        editionId: 'Professional',
+        installDate: DateTime(2020, 1, 1),
+        productId: '00330-80000-00000-AA123',
+        productName: 'Windows 11 Pro',
+        registeredOwner: 'John Doe',
+        releaseId: '2009',
+        deviceId: 'ABCDEF123456',
+      );
+
+      when(() => mockDeviceInfo.windowsInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.windows);
+      expect(details.platform, 'windows 22H2');
+      expect(details.deviceModel, 'MY-PC');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails returns linux values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+      final info = LinuxDeviceInfo(
+        name: 'Ubuntu',
+        version: '22.04.1 LTS (Jammy Jellyfish)',
+        id: 'ubuntu',
+        idLike: ['debian'],
+        versionCodename: 'jammy',
+        versionId: '22.04',
+        prettyName: 'Ubuntu 22.04.1 LTS',
+        buildId: '2023.04.26',
+        variant: 'Ubuntu Desktop',
+        variantId: 'ubuntu-desktop',
+        machineId: 'abc123-def456-ghi789',
+      );
+
+      when(() => mockDeviceInfo.linuxInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.linux);
+      expect(details.platform, 'linux 22.04.1 LTS (Jammy Jellyfish)');
+      expect(details.deviceModel, 'Ubuntu 22.04.1 LTS');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails returns web values on success', () async {
+      PlatformDetail.forTesting(mockedWeb: true);
+      final webInfo = WebBrowserInfo(
+        userAgent: 'Chrome',
+        appVersion: '115.0.5790.170',
+        appCodeName: 'Mozilla',
+        appName: 'Netscape',
+        deviceMemory: 8,
+        language: 'en-US',
+        languages: ['en-US'],
+        platform: 'Win32',
+        product: 'Gecko',
+        productSub: '20030107',
+        vendor: 'GoogleInc.',
+        vendorSub: '',
+        maxTouchPoints: 0,
+        hardwareConcurrency: 4,
+      );
+
+      when(() => mockDeviceInfo.webBrowserInfo)
+          .thenAnswer((_) async => webInfo);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.web);
+      expect(details.platform, 'web chrome');
+      expect(details.deviceModel, 'Win32');
+      expect(details.locale, 'es-ES');
+      PlatformDetail.forTesting(mockedWeb: false);
+    });
+
+    test('environmentDetails returns fuchsia values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.fuchsia);
+      expect(details.platform, 'fuchsia');
+      expect(details.deviceModel, 'unknown');
+      expect(details.locale, 'es-ES');
     });
   });
 }

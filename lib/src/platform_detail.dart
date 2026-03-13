@@ -38,14 +38,7 @@ class PlatformDetail {
 
   /// Returns an enum with the group of platform related.
   static PlatformGroup get currentGroupPlatform {
-    if (isWeb) {
-      return PlatformGroup.web;
-    } else if (isDesktop) {
-      return PlatformGroup.desktop;
-    } else if (isMobile) {
-      return PlatformGroup.mobile;
-    }
-    throw Exception('Platform ($defaultTargetPlatform) unrecognized.');
+    return _groupFromPlatform(currentPlatform);
   }
 
   /// Returns the current platform type, including support for web.
@@ -56,14 +49,22 @@ class PlatformDetail {
 
   /// This parameter returns an enum with the group of platform related.
   static PlatformGroup get type {
-    if (isWeb) {
-      return PlatformGroup.web;
-    } else if (isDesktop) {
-      return PlatformGroup.desktop;
-    } else if (isMobile) {
-      return PlatformGroup.mobile;
+    return _groupFromPlatform(currentPlatform);
+  }
+
+  static PlatformGroup _groupFromPlatform(PlatformType platform) {
+    switch (platform) {
+      case PlatformType.web:
+        return PlatformGroup.web;
+      case PlatformType.android:
+      case PlatformType.iOS:
+      case PlatformType.fuchsia:
+        return PlatformGroup.mobile;
+      case PlatformType.macOS:
+      case PlatformType.windows:
+      case PlatformType.linux:
+        return PlatformGroup.desktop;
     }
-    throw Exception('Platform ($defaultTargetPlatform) unrecognized.');
   }
 
   /// Checks if the current platform is a desktop OS.
@@ -189,6 +190,79 @@ class PlatformDetail {
         return await _deviceInfo.webBrowserInfo;
       case PlatformType.fuchsia:
         return await _deviceInfo.deviceInfo;
+    }
+  }
+
+  /// Returns compact environment details for telemetry and diagnostics.
+  static Future<EnvironmentDetails> environmentDetails() async {
+    final platformType = currentPlatform;
+    final locale = _platformDispatcher.locale.toLanguageTag();
+
+    try {
+      switch (platformType) {
+        case PlatformType.android:
+          final info = await _deviceInfo.androidInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'android ${info.version.release}',
+            deviceModel: '${info.manufacturer} ${info.model}'.trim(),
+            locale: locale,
+          );
+        case PlatformType.iOS:
+          final info = await _deviceInfo.iosInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'ios ${info.systemVersion}',
+            deviceModel: info.modelName,
+            locale: locale,
+          );
+        case PlatformType.macOS:
+          final info = await _deviceInfo.macOsInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'macos ${info.osRelease}',
+            deviceModel: info.modelName,
+            locale: locale,
+          );
+        case PlatformType.windows:
+          final info = await _deviceInfo.windowsInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'windows ${info.displayVersion}',
+            deviceModel: info.computerName,
+            locale: locale,
+          );
+        case PlatformType.linux:
+          final info = await _deviceInfo.linuxInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'linux ${info.version}',
+            deviceModel: info.prettyName,
+            locale: locale,
+          );
+        case PlatformType.web:
+          final info = await _deviceInfo.webBrowserInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'web ${info.browserName.name}',
+            deviceModel: info.platform ?? 'browser',
+            locale: locale,
+          );
+        case PlatformType.fuchsia:
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'fuchsia',
+            deviceModel: 'unknown',
+            locale: locale,
+          );
+      }
+    } catch (_) {
+      return EnvironmentDetails(
+        platformType: platformType,
+        platform: platformType.name,
+        deviceModel: 'unknown',
+        locale: locale,
+      );
     }
   }
 

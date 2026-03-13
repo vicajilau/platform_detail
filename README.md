@@ -32,15 +32,21 @@ It provides a unified and consistent API for checking the platform your app is r
 
 - ✅ Unified API across all platforms (including web).
 - ✅ Clear separation between **platform type** and **platform group**.
-- ✅ Singleton behavior via factory constructor.
+- ✅ Static API with simple access from `PlatformDetail`.
 - ✅ No need to manually check `kIsWeb` or rely on partial solutions.
+- ✅ Typed runtime environment details (`platform`, `deviceModel`, `locale`, `platformType`).
 - ✅ Detect private and public IP addresses.
 - ✅ Detect device theme (light or dark).
 
 ## Getting Started
 
-The recommended way to use the library is to call the static members of the [PlatformDetail] class.  
-Thanks to a factory constructor, multiple instances are not created — a singleton is used internally.
+The recommended way to use the library is to call the static members of the [PlatformDetail] class.
+
+### Run the Example
+
+The `example` app now shows device info, network info and `EnvironmentDetails` on screen.
+
+If you use VS Code, you can launch it with the `Flutter Example` debug configuration (`cwd: example`, `program: lib/main.dart`).
 
 ---
 
@@ -211,6 +217,29 @@ This will return something like this:
 - Linux: Fedora 17 (Beefy Miracle)
 - Windows: Windows 10 Home (1903)
 - MacOS: macOS 13.5, MacBook Pro
+---
+
+### Get compact environment details
+If you need a typed and lightweight payload with platform, model and locale, use `environmentDetails()`:
+
+```dart
+void main() async {
+  final details = await PlatformDetail.environmentDetails();
+
+  print(details.platformType); // PlatformType.android
+  print(details.platform); // android 14
+  print(details.deviceModel); // Google Pixel 8
+  print(details.locale); // en-US
+}
+```
+
+This returns an `EnvironmentDetails` object with these fields:
+- `platformType`: `PlatformType`
+- `platform`: `String`
+- `deviceModel`: `String`
+- `locale`: `String`
+
+The `example` app includes a section that renders these values on screen.
 ---
 
 ### Light/Dark Mode
