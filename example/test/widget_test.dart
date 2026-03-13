@@ -1,10 +1,3 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -58,12 +51,22 @@ void main() {
         find.text('No private IP available').evaluate().isNotEmpty ||
         find.text('Private IP: Unavailable').evaluate().isNotEmpty;
 
+    final hasAppDetailsState = hasLoadingState ||
+        find.textContaining('App Details:').evaluate().isNotEmpty ||
+        find.textContaining('App Name:').evaluate().isNotEmpty ||
+        find.textContaining('Package Name:').evaluate().isNotEmpty ||
+        find.textContaining('Version:').evaluate().isNotEmpty ||
+        find.textContaining('Build Number:').evaluate().isNotEmpty ||
+        find.textContaining('No app details available').evaluate().isNotEmpty ||
+        find.textContaining('Error getting app details:').evaluate().isNotEmpty;
+
     final hasPublicIpState = hasLoadingState ||
         find.textContaining('Public IP:').evaluate().isNotEmpty ||
         find.textContaining('Error getting public IP:').evaluate().isNotEmpty ||
         find.text('No public IP available').evaluate().isNotEmpty;
 
     expect(hasDeviceInfoState, isTrue);
+    expect(hasAppDetailsState, isTrue);
     expect(hasPrivateIpState, isTrue);
     expect(hasPublicIpState, isTrue);
   });
