@@ -1,3 +1,7 @@
+## 5.2.0
+* Updated device_info_plus and dio dependencies.
+* Fixed tests.
+
 ## 5.1.0
 * Added mocked capabilities with `PlatformDetail.forTesting()`.
 * Added `getPublicIp` and `getPrivateIp` methods. [@carloscgm](https://github.com/carloscgm).

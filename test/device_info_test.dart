@@ -184,6 +184,8 @@ void main() {
         ],
         'serialNumber': 'unknown',
         'isLowRamDevice': false,
+        'freeDiskSize': 128000,
+        'totalDiskSize': 512000,
         'physicalRamSize': 16,
         'availableRamSize': 6
       };
@@ -219,6 +221,8 @@ void main() {
           'version': 'Darwin Kernel Version 23.4.0',
           'machine': 'iPhone15,2',
         },
+        'freeDiskSize': 128000,
+        'totalDiskSize': 512000,
         'physicalRamSize': 16,
         'availableRamSize': 6
       };
