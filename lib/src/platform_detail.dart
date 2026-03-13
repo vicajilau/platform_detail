@@ -192,6 +192,79 @@ class PlatformDetail {
     }
   }
 
+  /// Returns compact environment details for telemetry and diagnostics.
+  static Future<EnvironmentDetails> environmentDetails() async {
+    final platformType = currentPlatform;
+    final locale = _platformDispatcher.locale.toLanguageTag();
+
+    try {
+      switch (platformType) {
+        case PlatformType.android:
+          final info = await _deviceInfo.androidInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'android ${info.version.release}',
+            deviceModel: '${info.manufacturer} ${info.model}'.trim(),
+            locale: locale,
+          );
+        case PlatformType.iOS:
+          final info = await _deviceInfo.iosInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'ios ${info.systemVersion}',
+            deviceModel: info.modelName,
+            locale: locale,
+          );
+        case PlatformType.macOS:
+          final info = await _deviceInfo.macOsInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'macos ${info.osRelease}',
+            deviceModel: info.modelName,
+            locale: locale,
+          );
+        case PlatformType.windows:
+          final info = await _deviceInfo.windowsInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'windows ${info.displayVersion}',
+            deviceModel: info.computerName,
+            locale: locale,
+          );
+        case PlatformType.linux:
+          final info = await _deviceInfo.linuxInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'linux ${info.version}',
+            deviceModel: info.prettyName,
+            locale: locale,
+          );
+        case PlatformType.web:
+          final info = await _deviceInfo.webBrowserInfo;
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'web ${info.browserName.name}',
+            deviceModel: info.platform ?? 'browser',
+            locale: locale,
+          );
+        case PlatformType.fuchsia:
+          return EnvironmentDetails(
+            platformType: platformType,
+            platform: 'fuchsia',
+            deviceModel: 'unknown',
+            locale: locale,
+          );
+      }
+    } catch (_) {
+      return EnvironmentDetails(
+        platformType: platformType,
+        platform: platformType.name,
+        deviceModel: 'unknown',
+        locale: locale,
+      );
+    }
+  }
+
   /// Checks if the device is in Dark Mode.
   static bool get isDarkMode =>
       _platformDispatcher.platformBrightness == Brightness.dark;

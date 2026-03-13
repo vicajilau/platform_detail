@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,6 +19,8 @@ void main() {
     setUpAll(() {
       mockDeviceInfo = MockDeviceInfoPlugin();
       mockPlatformDispatcher = MockPlatformDispatcher();
+      when(() => mockPlatformDispatcher.locale)
+          .thenReturn(const Locale('es', 'ES'));
       PlatformDetail.forTesting(
           mockDeviceInfo: mockDeviceInfo,
           mockPlatformDispatcher: mockPlatformDispatcher);
@@ -257,6 +261,71 @@ void main() {
       expect(infoDetailString,
           'Fuchsia BaseDeviceInfo{data: {name: Fuchsia Emulator, systemName: Fuchsia, systemVersion: 1.0.0, model: Fuchsia Dev Board, isPhysicalDevice: false}}');
       expect(infoDetail, info);
+    });
+
+    test('environmentDetails uses PlatformType and wrapper on android',
+        () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final mockMap = {
+        'version': {
+          'sdkInt': 33,
+          'release': '13',
+          'previewSdkInt': 0,
+          'incremental': 'abcd1234',
+          'codename': 'REL',
+          'baseOS': 'android',
+          'securityPatch': '2024-04-01',
+        },
+        'board': 'goldfish_x86_64',
+        'bootloader': 'unknown',
+        'brand': 'google',
+        'device': 'generic_x86_64',
+        'display': 'sdk_gphone_x86_64-userdebug 13',
+        'fingerprint': 'google/sdk_gphone_x86_64',
+        'hardware': 'ranchu',
+        'host': 'abfarm999',
+        'id': 'TQ3A.230805.001.A1',
+        'manufacturer': 'Google',
+        'model': 'Pixel 6 Pro',
+        'product': 'sdk_gphone_x86_64',
+        'name': 'generic_x86_64',
+        'supported32BitAbis': ['x86'],
+        'supported64BitAbis': ['x86_64'],
+        'supportedAbis': ['x86_64', 'x86'],
+        'tags': 'test-keys',
+        'type': 'userdebug',
+        'isPhysicalDevice': false,
+        'systemFeatures': [
+          'android.hardware.camera',
+          'android.hardware.sensor.accelerometer'
+        ],
+        'serialNumber': 'unknown',
+        'isLowRamDevice': false,
+        'freeDiskSize': 128000,
+        'totalDiskSize': 512000,
+        'physicalRamSize': 16,
+        'availableRamSize': 6
+      };
+      final info = AndroidDeviceInfo.fromMap(mockMap);
+
+      when(() => mockDeviceInfo.androidInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.android);
+      expect(details.platform, 'android 13');
+      expect(details.deviceModel, 'Google Pixel 6 Pro');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails falls back on plugin error', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      when(() => mockDeviceInfo.iosInfo).thenThrow(Exception('boom'));
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.iOS);
+      expect(details.platform, 'iOS');
+      expect(details.deviceModel, 'unknown');
+      expect(details.locale, 'es-ES');
     });
   });
 }

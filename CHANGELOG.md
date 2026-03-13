@@ -1,3 +1,10 @@
+## 5.3.0
+* Added `EnvironmentDetails` as a typed wrapper for runtime environment metadata.
+* Added `PlatformDetail.environmentDetails()` to get compact platform, model, locale, and `PlatformType` data.
+* Exported `EnvironmentDetails` from the public API.
+* Updated example app to render the new environment details on screen.
+* Added tests for `environmentDetails()` success and fallback flows.
+
 ## 5.2.0
 * Updated device_info_plus and dio dependencies.
 * Fixed tests.

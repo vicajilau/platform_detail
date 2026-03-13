@@ -41,52 +41,84 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            FutureBuilder(
-                future: PlatformDetail.deviceInfoDetails(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error getting device info: ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    return Text('Device Info: ${snapshot.data}');
-                  } else {
-                    return Text('No data available');
+            FutureBuilder<EnvironmentDetails>(
+              future: PlatformDetail.environmentDetails(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text(
+                      'Error getting environment details: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  final details = snapshot.data!;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Environment Details:'),
+                      Text('PlatformType: ${details.platformType.name}'),
+                      Text('Platform: ${details.platform}'),
+                      Text('Device Model: ${details.deviceModel}'),
+                      Text('Locale: ${details.locale}'),
+                    ],
+                  );
+                } else {
+                  return const Text('No environment details available');
+                }
+              },
+            ),
+            const SizedBox(height: 16),
+            FutureBuilder<String>(
+              future: PlatformDetail.deviceInfoDetails(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error getting device info: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  return Text('Device Info: ${snapshot.data}');
+                } else {
+                  return const Text('No data available');
+                }
+              },
+            ),
+            const SizedBox(height: 16),
+            FutureBuilder<List<String>>(
+              future: PlatformDetail.getPrivateIp,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error getting private IP: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return const Text('Private IP: Unavailable');
                   }
-                }),
-            FutureBuilder(
-                future: PlatformDetail.getPrivateIp,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error getting private IP: ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    if (snapshot.data!.isEmpty) {
-                      return Text('Private IP: Unavailable');
-                    }
-                    return Text('Private IP: ${snapshot.data}');
-                  } else {
-                    return Text('No private IP available');
-                  }
-                }),
-            FutureBuilder(
-                future: PlatformDetail.getPublicIp,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error getting public IP: ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    return Text('Public IP: ${snapshot.data}');
-                  } else {
-                    return Text('No public IP available');
-                  }
-                }),
+                  return Text('Private IP: ${snapshot.data}');
+                } else {
+                  return const Text('No private IP available');
+                }
+              },
+            ),
+            const SizedBox(height: 16),
+            FutureBuilder<String?>(
+              future: PlatformDetail.getPublicIp,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error getting public IP: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  return Text('Public IP: ${snapshot.data}');
+                } else {
+                  return const Text('No public IP available');
+                }
+              },
+            ),
           ],
         ),
       ),
