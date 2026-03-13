@@ -1,3 +1,10 @@
+## 5.4.0
+* Added `VersionDetails` as a typed wrapper for app package metadata.
+* Added `PlatformDetail.versionDetails()` to get `appName`, `packageName`, `version` and `buildNumber`.
+* Exported `VersionDetails` from the public API.
+* Updated example app to render app details on screen.
+* Added tests for `versionDetails()` success, fallback, and partial-failure flows.
+
 ## 5.3.0
 * Added `EnvironmentDetails` as a typed wrapper for runtime environment metadata.
 * Added `PlatformDetail.environmentDetails()` to get compact platform, model, locale, and `PlatformType` data.
