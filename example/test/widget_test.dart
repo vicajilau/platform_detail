@@ -11,20 +11,42 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:example/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('Example app renders platform detail screen',
+      (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.textContaining('Flutter Demo Home Page'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Let FutureBuilders settle and verify the page keeps expected sections.
+    await tester.pump();
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    final infoTexts = find.byWidgetPredicate(
+      (widget) =>
+          widget is Text &&
+          ((widget.data?.contains('Device Info:') ?? false) ||
+              (widget.data?.contains('Error getting device info:') ?? false) ||
+              (widget.data?.contains('No data available') ?? false)),
+    );
+
+    final privateIpTexts = find.byWidgetPredicate(
+      (widget) =>
+          widget is Text &&
+          ((widget.data?.contains('Private IP:') ?? false) ||
+              (widget.data?.contains('Error getting private IP:') ?? false) ||
+              (widget.data?.contains('No private IP available') ?? false)),
+    );
+
+    final publicIpTexts = find.byWidgetPredicate(
+      (widget) =>
+          widget is Text &&
+          ((widget.data?.contains('Public IP:') ?? false) ||
+              (widget.data?.contains('Error getting public IP:') ?? false) ||
+              (widget.data?.contains('No public IP available') ?? false)),
+    );
+
+    expect(infoTexts, findsOneWidget);
+    expect(privateIpTexts, findsOneWidget);
+    expect(publicIpTexts, findsOneWidget);
   });
 }
