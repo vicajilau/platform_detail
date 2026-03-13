@@ -327,5 +327,172 @@ void main() {
       expect(details.deviceModel, 'unknown');
       expect(details.locale, 'es-ES');
     });
+
+    test('environmentDetails returns ios values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final mockMap = {
+        'name': 'Flutter iPhone',
+        'systemName': 'iOS',
+        'systemVersion': '17.4.1',
+        'model': 'iPhone',
+        'modelName': 'iPhone 14 Pro',
+        'localizedModel': 'iPhone',
+        'identifierForVendor': '12345678-1234-1234-1234-1234567890ab',
+        'isPhysicalDevice': true,
+        'isiOSAppOnMac': false,
+        'utsname': {
+          'sysname': 'Darwin',
+          'nodename': 'iPhone',
+          'release': '23.4.0',
+          'version': 'Darwin Kernel Version 23.4.0',
+          'machine': 'iPhone15,2',
+        },
+        'freeDiskSize': 128000,
+        'totalDiskSize': 512000,
+        'physicalRamSize': 16,
+        'availableRamSize': 6
+      };
+      final info = IosDeviceInfo.fromMap(mockMap);
+
+      when(() => mockDeviceInfo.iosInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.iOS);
+      expect(details.platform, 'ios 17.4.1');
+      expect(details.deviceModel, 'iPhone 14 Pro');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails returns macOS values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      final info = MacOsDeviceInfo.fromMap({
+        'computerName': 'MyMac',
+        'hostName': 'mymac.local',
+        'arch': 'x86_64',
+        'model': 'MacBookPro18,3',
+        'modelName': 'MacBook Pro',
+        'kernelVersion': 'Darwin 23.2.0',
+        'osRelease': '23.2.0',
+        'majorVersion': 14,
+        'minorVersion': 2,
+        'patchVersion': 0,
+        'activeCPUs': 8,
+        'memorySize': 17179869184,
+        'cpuFrequency': 2400000000,
+        'systemGUID': 'ABC123-XYZ789'
+      });
+
+      when(() => mockDeviceInfo.macOsInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.macOS);
+      expect(details.platform, 'macos 23.2.0');
+      expect(details.deviceModel, 'MacBook Pro');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails returns windows values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+      final info = WindowsDeviceInfo(
+        computerName: 'MY-PC',
+        numberOfCores: 8,
+        systemMemoryInMegabytes: 16384,
+        userName: 'TestUser',
+        majorVersion: 10,
+        minorVersion: 0,
+        buildNumber: 22621,
+        platformId: 2,
+        csdVersion: '',
+        servicePackMajor: 0,
+        servicePackMinor: 0,
+        suitMask: 0,
+        productType: 1,
+        reserved: 0,
+        buildLab: '22621.vb_release.191206-1406',
+        buildLabEx: '22621.1.amd64fre.ni_release.210506-1631',
+        digitalProductId: Uint8List.fromList([1, 2, 3, 4]),
+        displayVersion: '22H2',
+        editionId: 'Professional',
+        installDate: DateTime(2020, 1, 1),
+        productId: '00330-80000-00000-AA123',
+        productName: 'Windows 11 Pro',
+        registeredOwner: 'John Doe',
+        releaseId: '2009',
+        deviceId: 'ABCDEF123456',
+      );
+
+      when(() => mockDeviceInfo.windowsInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.windows);
+      expect(details.platform, 'windows 22H2');
+      expect(details.deviceModel, 'MY-PC');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails returns linux values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+      final info = LinuxDeviceInfo(
+        name: 'Ubuntu',
+        version: '22.04.1 LTS (Jammy Jellyfish)',
+        id: 'ubuntu',
+        idLike: ['debian'],
+        versionCodename: 'jammy',
+        versionId: '22.04',
+        prettyName: 'Ubuntu 22.04.1 LTS',
+        buildId: '2023.04.26',
+        variant: 'Ubuntu Desktop',
+        variantId: 'ubuntu-desktop',
+        machineId: 'abc123-def456-ghi789',
+      );
+
+      when(() => mockDeviceInfo.linuxInfo).thenAnswer((_) async => info);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.linux);
+      expect(details.platform, 'linux 22.04.1 LTS (Jammy Jellyfish)');
+      expect(details.deviceModel, 'Ubuntu 22.04.1 LTS');
+      expect(details.locale, 'es-ES');
+    });
+
+    test('environmentDetails returns web values on success', () async {
+      PlatformDetail.forTesting(mockedWeb: true);
+      final webInfo = WebBrowserInfo(
+        userAgent: 'Chrome',
+        appVersion: '115.0.5790.170',
+        appCodeName: 'Mozilla',
+        appName: 'Netscape',
+        deviceMemory: 8,
+        language: 'en-US',
+        languages: ['en-US'],
+        platform: 'Win32',
+        product: 'Gecko',
+        productSub: '20030107',
+        vendor: 'GoogleInc.',
+        vendorSub: '',
+        maxTouchPoints: 0,
+        hardwareConcurrency: 4,
+      );
+
+      when(() => mockDeviceInfo.webBrowserInfo)
+          .thenAnswer((_) async => webInfo);
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.web);
+      expect(details.platform, 'web chrome');
+      expect(details.deviceModel, 'Win32');
+      expect(details.locale, 'es-ES');
+      PlatformDetail.forTesting(mockedWeb: false);
+    });
+
+    test('environmentDetails returns fuchsia values on success', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+
+      final details = await PlatformDetail.environmentDetails();
+      expect(details.platformType, PlatformType.fuchsia);
+      expect(details.platform, 'fuchsia');
+      expect(details.deviceModel, 'unknown');
+      expect(details.locale, 'es-ES');
+    });
   });
 }

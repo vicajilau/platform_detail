@@ -38,14 +38,7 @@ class PlatformDetail {
 
   /// Returns an enum with the group of platform related.
   static PlatformGroup get currentGroupPlatform {
-    if (isWeb) {
-      return PlatformGroup.web;
-    } else if (isDesktop) {
-      return PlatformGroup.desktop;
-    } else if (isMobile) {
-      return PlatformGroup.mobile;
-    }
-    throw Exception('Platform ($defaultTargetPlatform) unrecognized.');
+    return _groupFromPlatform(currentPlatform);
   }
 
   /// Returns the current platform type, including support for web.
@@ -56,14 +49,22 @@ class PlatformDetail {
 
   /// This parameter returns an enum with the group of platform related.
   static PlatformGroup get type {
-    if (isWeb) {
-      return PlatformGroup.web;
-    } else if (isDesktop) {
-      return PlatformGroup.desktop;
-    } else if (isMobile) {
-      return PlatformGroup.mobile;
+    return _groupFromPlatform(currentPlatform);
+  }
+
+  static PlatformGroup _groupFromPlatform(PlatformType platform) {
+    switch (platform) {
+      case PlatformType.web:
+        return PlatformGroup.web;
+      case PlatformType.android:
+      case PlatformType.iOS:
+      case PlatformType.fuchsia:
+        return PlatformGroup.mobile;
+      case PlatformType.macOS:
+      case PlatformType.windows:
+      case PlatformType.linux:
+        return PlatformGroup.desktop;
     }
-    throw Exception('Platform ($defaultTargetPlatform) unrecognized.');
   }
 
   /// Checks if the current platform is a desktop OS.
