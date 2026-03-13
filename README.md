@@ -242,6 +242,27 @@ This returns an `EnvironmentDetails` object with these fields:
 The `example` app includes a section that renders these values on screen.
 ---
 
+### Get app version and build number
+If you need app package metadata, you can use `versionDetails()`:
+
+```dart
+void main() async {
+  final details = await PlatformDetail.versionDetails();
+
+  print(details.appName); // My App
+  print(details.packageName); // com.example.my_app
+  print(details.version); // 5.4.0
+  print(details.buildNumber); // 12
+}
+```
+
+This returns a `VersionDetails` object with these fields:
+- `appName`: `String`
+- `packageName`: `String`
+- `version`: `String`
+- `buildNumber`: `String`
+---
+
 ### Light/Dark Mode
 You can detect too if the device is configured in light or dark mode:
 

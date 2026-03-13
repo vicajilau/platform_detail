@@ -1,5 +1,6 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:platform_detail/src/target_platform_extension.dart';
 
@@ -20,6 +21,8 @@ class PlatformDetail {
       SchedulerBinding.instance.platformDispatcher;
 
   static NetworkUtils _networkUtils = NetworkUtils();
+  static Future<PackageInfo> Function() _packageInfoProvider =
+      PackageInfo.fromPlatform;
   static bool _mockedWeb = false;
 
   /// Testing purposes!!!
@@ -28,11 +31,13 @@ class PlatformDetail {
     DeviceInfoPlugin? mockDeviceInfo,
     PlatformDispatcher? mockPlatformDispatcher,
     NetworkUtils? mockNetworkUtils,
+    Future<PackageInfo> Function()? mockPackageInfoProvider,
     mockedWeb = false,
   }) {
     _deviceInfo = mockDeviceInfo ?? _deviceInfo;
     _platformDispatcher = mockPlatformDispatcher ?? _platformDispatcher;
     _networkUtils = mockNetworkUtils ?? _networkUtils;
+    _packageInfoProvider = mockPackageInfoProvider ?? _packageInfoProvider;
     _mockedWeb = mockedWeb;
   }
 
@@ -263,6 +268,28 @@ class PlatformDetail {
         deviceModel: 'unknown',
         locale: locale,
       );
+    }
+  }
+
+  /// Returns app package metadata (`appName`, `packageName`, `version` and `buildNumber`).
+  static Future<VersionDetails> versionDetails() async {
+    return VersionDetails(
+      appName: await _safePackageInfoValue((info) => info.appName),
+      packageName: await _safePackageInfoValue((info) => info.packageName),
+      version: await _safePackageInfoValue((info) => info.version),
+      buildNumber: await _safePackageInfoValue((info) => info.buildNumber),
+    );
+  }
+
+  static Future<String> _safePackageInfoValue(
+    String Function(PackageInfo info) valueSelector,
+  ) async {
+    try {
+      final info = await _packageInfoProvider();
+      final value = valueSelector(info).trim();
+      return value.isEmpty ? 'unknown' : value;
+    } catch (_) {
+      return 'unknown';
     }
   }
 

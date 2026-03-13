@@ -87,6 +87,31 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             const SizedBox(height: 16),
+            FutureBuilder<VersionDetails>(
+              future: PlatformDetail.versionDetails(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error getting app details: ${snapshot.error}');
+                } else if (snapshot.hasData) {
+                  final details = snapshot.data!;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('App Details:'),
+                      Text('App Name: ${details.appName}'),
+                      Text('Package Name: ${details.packageName}'),
+                      Text('Version: ${details.version}'),
+                      Text('Build Number: ${details.buildNumber}'),
+                    ],
+                  );
+                } else {
+                  return const Text('No app details available');
+                }
+              },
+            ),
+            const SizedBox(height: 16),
             FutureBuilder<List<String>>(
               future: PlatformDetail.getPrivateIp,
               builder: (context, snapshot) {
