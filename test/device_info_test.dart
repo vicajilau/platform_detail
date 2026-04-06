@@ -218,6 +218,7 @@ void main() {
         'identifierForVendor': '12345678-1234-1234-1234-1234567890ab',
         'isPhysicalDevice': true,
         'isiOSAppOnMac': false,
+        'isiOSAppOnVision': false,
         'utsname': {
           'sysname': 'Darwin',
           'nodename': 'iPhone',
@@ -340,6 +341,7 @@ void main() {
         'identifierForVendor': '12345678-1234-1234-1234-1234567890ab',
         'isPhysicalDevice': true,
         'isiOSAppOnMac': false,
+        'isiOSAppOnVision': false,
         'utsname': {
           'sysname': 'Darwin',
           'nodename': 'iPhone',
