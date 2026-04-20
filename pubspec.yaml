@@ -8,9 +8,9 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  device_info_plus: ^12.3.0
+  device_info_plus: ">=12.3.0 <14.0.0"
   dio: ^5.9.2
-  package_info_plus: ^9.0.0
+  package_info_plus: ">=9.0.0 <11.0.0"
   flutter:
     sdk: flutter
 
