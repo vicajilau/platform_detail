@@ -1,3 +1,8 @@
+## 5.5.0
+* Improves version compatibility for dependencies.
+* Updated dependencies.
+* Improvements to the repository and documentation.
+
 ## 5.4.0
 * Added `VersionDetails` as a typed wrapper for app package metadata.
 * Added `PlatformDetail.versionDetails()` to get `appName`, `packageName`, `version` and `buildNumber`.
